@@ -3,7 +3,7 @@
    </head>
 	<body>
 <?php
-echo 'teste'
+echo 'Bem vindo!'
 ?>
   </body>
 </html>
