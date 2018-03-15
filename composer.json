@@ -1,0 +1,18 @@
+{
+    "name": "vendor/hotel",
+    "description": "Descrição do projeto hotel.",
+    "authors": [
+        {
+            "name": "iftm",
+            "email": "your@email.here"
+        }
+    ],
+    "require": {
+    "php": ">=7.0.0"
+    },
+    "autoload" :{
+        "psr-4" :{
+            "hotel\\":"src/"
+        }
+    }
+}
