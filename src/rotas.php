@@ -12,3 +12,5 @@ $rotas->add('teste', $rota);
 return $rotas;
 $contexto = new RequestContext(); // coringa(); no lugar de request
 $contexto->fromRequest(Request::createFromGlobals());
+
+$matcher = new UrlMatcher($rotas,$contexto);
