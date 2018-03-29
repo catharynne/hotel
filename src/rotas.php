@@ -6,9 +6,16 @@ use Symfony\Composer\Routing\RequestContext as coringa; // as nome e apelido par
 use Symfony\Composer\Routing\RouteCollection;
 use Symfony\Composer\Routing\Route;
 
-$rota = new Router('/esporte', array('_controller' => 'ControladorEsporte',"method"=>'msgInicial'));
+
+
 $rotas = new RouteCollection();
-$rotas->add('teste', $rota);
+
+$rotas->add('esporte', $rota = new Router('/esporte', 
+        array('_controller' => 'Hotel\Controller\ControladorEsporte',"method"=>'msgInicial')));
+
+$rotas->add('financeiro', $rota = new Router('/contasReceber', 
+        array('_controller' => 'Hotel\Controller\ControladorContasReceber',"method"=>'msgInicial')));
+
 
 return $rotas;
 
