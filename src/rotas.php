@@ -10,8 +10,9 @@ use Symfony\Composer\Routing\Route;
 
 $rotas = new RouteCollection();
 
-$rotas->add('esporte', $rota = new Router('/esporte', 
-        array('_controller' => 'Hotel\Controller\ControladorEsporte',"method"=>'msgInicial')));
+$rotas->add('esporte', $rota = new Router('/esporte/{sufix}', 
+        array('_controller' => 'Hotel\Controller\ControladorEsporte',"method"=>'msgInicial'),
+        array('sufix'=>'','sufix'=>'.*')));
 
 $rotas->add('financeiro', $rota = new Router('/contasReceber', 
         array('_controller' => 'Hotel\Controller\ControladorContasReceber',"method"=>'msgInicial')));

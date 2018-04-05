@@ -24,20 +24,27 @@ $matcher = new UrlMatcher($rotas, $contexto);
 //print_r($matcher->match('/esporte'));
 
 try {
-    $atributos = $matcher->match($contexto->getPathInfo());//pega a url 
+    $atributos = $matcher->match($contexto->getPathInfo()); //pega a url 
+    
     $controller = $atributos['_controller'];
+    
     $method = $atributos['method'];
-    $parametros = '';
-    $obj= new $controller($response,$contexto);
-    $obj->$method();
+    
+    $parametros='';
+    
+    if(isset $atributos['sufix'];)
+    
+    $obj = new $controller($response, $contexto);
+    
+    $obj->$method($parametros = '');
     
 } catch (Exception $ex) {
-    $response->SetContent('Not Found 404',Response::HTTP_NOT_FOUND);
+    
+    $response->SetContent('Not Found 404', Response::HTTP_NOT_FOUND);
+    
 }
+
 //print_r($matcher->($contexto->getPathInfo()));
-
-
-
 //$conteudo = 'asdasdasdasd';
 //$response->setContent($conteudo);
 $response->send();

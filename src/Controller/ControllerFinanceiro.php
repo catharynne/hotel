@@ -15,9 +15,9 @@ class ControllerFinanceiro {
         $this->contexto = $contexto;
     }
 
-    public function msgInicial() {
+    public function msgInicial($parametro) {
         
-        return $this->response->setontent($this->contexto->getPathInfo());
+        return $this->response->setontent("Id : ".$parametro);//$this->contexto->getPathInfo());
         //passa a resposta e o que se sendo requisitado na url
         
     }
