@@ -30,9 +30,7 @@ try {
     
     $method = $atributos['method'];
     
-    $parametros='';
-    
-    if(isset $atributos['sufix'];)
+    $parametros = $atributos['sufix'];
     
     $obj = new $controller($response, $contexto);
     

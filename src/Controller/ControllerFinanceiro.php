@@ -17,6 +17,12 @@ class ControllerFinanceiro {
 
     public function msgInicial($parametro) {
         
+        if(!id_numeric($parametro)&&($parametro !='')){
+            
+            $parametro='nao localizado';
+            
+        }
+        
         return $this->response->setontent("Id : ".$parametro);//$this->contexto->getPathInfo());
         //passa a resposta e o que se sendo requisitado na url
         
