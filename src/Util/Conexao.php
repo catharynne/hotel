@@ -8,7 +8,7 @@ class Conexao {
        
    }
    public static function getInstancia(){
-       if(!self::$instancia){
+       if(!isset(self::$instancia)){
            self::$instancia = new PDO("mysql:host=localhost;dbname=NOME_BANCO",'USUARIO','SENHA');
            self::$instancia->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES uft8");
            self::$instancia->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
@@ -17,6 +17,12 @@ class Conexao {
            
        }
        return self::$instancia;
+   }
+   public function close(){
+      if(isset(self::$instancia)){
+          self::$instancia = null;
+          
+      }
    }
 
 }
