@@ -17,6 +17,9 @@ $rotas->add('esporte', $rota = new Router('/esporte/{sufix}',
 $rotas->add('financeiro', $rota = new Router('/contasReceber', 
         array('_controller' => 'Hotel\Controller\ControladorContasReceber',"method"=>'msgInicial')));
 
+$rotas->add('listarClientes', $rota = new Router('/listar', 
+        array('_controller' => 'hotel\Entidades\ControllerFinanceiro',"method"=>'listarClientes')));
+
 
 return $rotas;
 

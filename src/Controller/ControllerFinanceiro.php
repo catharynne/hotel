@@ -4,6 +4,7 @@ namespace Hotel\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RequestContext;
+use Hotel\Modelos\ModeloCliente;
 class ControllerFinanceiro {
 
     private $response;
@@ -28,4 +29,9 @@ class ControllerFinanceiro {
         
     }
 
+    public function listarClientes(){
+        $modelo = new ModeloCliente();
+        return $this->response->setContent($modelo->listarClientes());
+    }
+    
 }

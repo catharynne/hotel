@@ -1,5 +1,6 @@
 <?php
-
+namespace Hotel\Util;
+use PDO;
 
 class Conexao {
    private static $instancia;
