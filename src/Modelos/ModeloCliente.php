@@ -25,3 +25,6 @@ class ModeloCliente {
     }
 
 }
+
+// baixar composer, symfony, twing 
+// cd /var/www/html/hotel composer require "twig/twig:^2.0"
