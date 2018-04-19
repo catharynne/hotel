@@ -7,11 +7,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+         {{ include('componentes/menu.twig') }}
+        {% block conteudo %}
+       
         <div>Qualquer coisa aqui !!! texto ...<br>
             <br>
             <br>
             blz blz blz
         </div>
+        {% endblock %}
+        
+        {%b lock rodape%}
+            
+         {% endblock %}
+        
     </body>
 </html>
 {# empty Twig template #}
