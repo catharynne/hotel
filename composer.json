@@ -8,13 +8,14 @@
         }
     ],
     "require": {
-    "php": ">=7.0.0",
+        "php": ">=7.0.0",
         "symfony/http-foundation": "^3.4",
-        "symfony/routing": "^3.4"
+        "symfony/routing": "^3.4",
+        "twig/twig": "^2.3"
     },
     "autoload" :{
         "psr-4" :{
-            "Hotel\\":"src/"
+            "hotel\\":"src/"
         }
     }
-}ss
+}
