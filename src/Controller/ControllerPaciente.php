@@ -1,5 +1,8 @@
 <?php
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RequestContext;
+use Twig\Environment;
 namespace Hotel\Controller;
 
 class ControllerPaciente {
@@ -15,6 +18,17 @@ class ControllerPaciente {
         $this->twig=$twig;
         
     }
+    
+    public function show(){
+        return $this->response->setContent($this->twig->render('cadastroPaciente.twig')); 
+    }
+
+        public function cadastro(){
+            print_r($this->contexto);
+        }
+    
+    
+     
     
 }
 

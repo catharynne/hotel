@@ -21,5 +21,10 @@ $rotas->add('listarClientes', $rota = new Router('/listar',
         array('_controller' => 'hotel\Entidades\ControllerFinanceiro',"method"=>'listarClientes')));
 
 
+
+$rotas->add('cadastraProduto', $rota = new Router('/cadastro', 
+        array('_controller' => 'hotel\Controller\ControllerPaciente',"method"=>'cadastro')));
+
+
 return $rotas;
 
