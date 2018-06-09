@@ -14,6 +14,13 @@ $rotas->add('raiz', new Route('/', array(
 $rotas->add('esporte', new Route('/esportes/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerEsporte',"method" => 'msgInicial', 'suffix' => '')));
 
+$rotas->add('validaLogin', new Route('/validaLogin',
+        array('_controller' => 'PPI2\Controller\ControllerUsuario',
+            "method" => 'validaLogin')));
+$rotas->add('logout', new Route('/logout',
+        array('_controller' => 'PPI2\Controller\ControllerUsuario',
+            "method" => 'logout')));
+
 $rotas->add('produtos', new Route('/produtos',
         array('_controller' => 'PPI2\Controller\ControllerEsporte',
             "method" => 'listarProdutos')));

@@ -15,10 +15,9 @@ use PPI2\Util\Sessao;
 $sessao = new Sessao();
 $sessao->start();
 
-
 //$sessao->add("Usuario", 'Chris');
 //$sessao->del();
-
+//print_r($sessao->get('Usuario'));
 include 'rotas.php';
 
 $request = Request::createFromGlobals();
@@ -48,7 +47,6 @@ try {
         $parametros = $atributos['suffix'];
     else
         $parametros = '';
-    
     $obj = new $controller($response, $request, $environment, $sessao);
     $obj->$method($parametros);
 } catch (Exception $ex) {

@@ -3,9 +3,9 @@
  
  use Symfony\Component\HttpFoundation\Response;
  use Symfony\Component\HttpFoundation\Request;
- 
  use PPI2\Modelos\ModeloProdutos;
  use Twig\Environment;
+ use PPI2\Util\Sessao;
  
 class ControllerEsporte {
     

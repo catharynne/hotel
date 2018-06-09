@@ -8,9 +8,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Twig\Environment;
 use PPI2\Entidades\Produto;
 use PPI2\Modelos\ModeloProdutos;
+use PPI2\Modelos\UsuarioModelo;
 use PPI2\Util\Sessao;
 
-class ControllerIndex {
+class ControllerUsuario {
 
     private $response;
     private $contexto;
@@ -24,9 +25,6 @@ class ControllerIndex {
         $this->sessao = $sessao;
     }
 
-    public function index(){
-        return $this->response->setContent($this->twig->render('welcome.php'));
-    }
     public function show() {
         if ($this->sessao->existe('Usuario'))
             return $this->response->setContent($this->twig->render('cadastro.twig'));
@@ -38,19 +36,27 @@ class ControllerIndex {
         }
     }
 
-    public function cadastro() {
-        // validação
+    public function validaLogin(){
+        //validação via AJAX com method = POST da página welcome.php
+        $email = $this->contexto->get('email');
+        $senha = $this->contexto->get('senha');
+        $usuarioModelo = new UsuarioModelo();
+        $usuario = $usuarioModelo->validaUsuario($email,$senha);
+        //se tiver o usuário cadastrado no banco
+        if($usuario != null){
+            //passa o usuário para a sessão.
+            $this->sessao->add('usuario',$usuario);
+        }else{
+            //Usuário não encontrado, retorna para welcome.php e mostra o erro de usuário ou senha.
+            echo('errologin');
+            return;
+        }
 
-
-        $descricao = $this->contexto->get('descricao');
-        $preco = $this->contexto->get('preco');
-        // depois de validado
-        $produto = new Produto($descricao, $preco);
-        $modeloProduto = new ModeloProdutos();
-        if ($id = $modeloProduto->cadastrar($produto))
-            echo ("Produto $id inserido com sucesso");
-        else
-            echo "erro na inserção";
+    }
+    public function logout(){
+        $this->sessao->del();
+        $re = new RedirectResponse('/');
+        $re->send();
     }
 
 }
