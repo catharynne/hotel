@@ -1,30 +1,30 @@
 <?php
-namespace Hotel\Rotas;
 
-use Symfony\Composer\Routing\Matcher\UrlMatcher;
-use Symfony\Composer\Routing\RequestContext as coringa; // as nome e apelido para chamar a classe
-use Symfony\Composer\Routing\RouteCollection;
-use Symfony\Composer\Routing\Route;
+namespace PPI2\Rotas;
 
-
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Route;
 
 $rotas = new RouteCollection();
 
-$rotas->add('esporte', $rota = new Router('/esporte/{sufix}', 
-        array('_controller' => 'Hotel\Controller\ControladorEsporte',"method"=>'msgInicial','sufix'=>'')));
-        
+$rotas->add('raiz', new Route('/', array(
+    '_controller' => 'PPI2\Controller\ControllerIndex',
+    'method' => 'index')));
 
-$rotas->add('financeiro', $rota = new Router('/contasReceber', 
-        array('_controller' => 'Hotel\Controller\ControladorContasReceber',"method"=>'msgInicial')));
+$rotas->add('esporte', new Route('/esportes/{suffix}',
+        array('_controller' => 'PPI2\Controller\ControllerEsporte',"method" => 'msgInicial', 'suffix' => '')));
 
-$rotas->add('listarClientes', $rota = new Router('/listar', 
-        array('_controller' => 'hotel\Entidades\ControllerFinanceiro',"method"=>'listarClientes')));
-
-
-
-$rotas->add('cadastraProduto', $rota = new Router('/cadastro', 
-        array('_controller' => 'hotel\Controller\ControllerPaciente',"method"=>'cadastro')));
-
-
+$rotas->add('produtos', new Route('/produtos',
+        array('_controller' => 'PPI2\Controller\ControllerEsporte',
+            "method" => 'listarProdutos')));
+$rotas->add('formCadastro', new Route('/formularioCadastro',
+        array('_controller' => 'PPI2\Controller\ControllerCadastro',
+            "method" => 'show')));
+$rotas->add('cadastroProduto', new Route('/cadastro',
+        array('_controller' => 'PPI2\Controller\ControllerCadastro',
+            "method" => 'cadastro')));
+/* $rotas->add('esporte', new Route('/financas', array('_controller' => 'PPI2\Controller\ControllerFinancas', "method"=>'msgInicialFinancas')));
+  $rotas->add('esporte', new Route('/produtos', array('_controller' => 'PPI2\Controller\ControllerProduto', "method"=>'listar')));
+ */
 return $rotas;
 

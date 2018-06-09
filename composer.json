@@ -1,6 +1,6 @@
 {
-    "name": "hotel",
-    "description": "Descrição do projeto hotel.",
+    "name": "PPI2",
+    "description": "Descrição do projeto PPI2.",
     "authors": [
         {
             "name": "iftm",
@@ -11,11 +11,12 @@
         "php": ">=7.0.0",
         "symfony/http-foundation": "^3.4",
         "symfony/routing": "^3.4",
-        "twig/twig": "^2.3"
+        "twig/twig": "^2.0"
+        
     },
-    "autoload" :{
-        "psr-4" :{
-            "hotel\\":"src/"
+    "autoload":{
+        "psr-4":{
+            "PPI2\\":"src/"
         }
     }
 }

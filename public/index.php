@@ -1,10 +1,5 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-   </head>
-	<body>
 <?php
-echo 'Bem vindo!'
-?>
-  </body>
-</html>
-
+ini_set('display_errors',true);
+ini_set('display_startup_errors', true);
+error_reporting(E_ALL);
+require __DIR__.'/../src/bootstrap.php';

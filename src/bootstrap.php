@@ -1,56 +1,65 @@
 <?php
 
-namespace Hotel;
+namespace PPI2;
 
-require _DIR_ . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-use hotel\Entidades\Cliente;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Composer\Routing\RequestContext;
-use Symfony\Composer\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
-//rota apropriada  - > controlador que vai interceptar a requisição 
+use PPI2\Util\Sessao;
+
+$sessao = new Sessao();
+$sessao->start();
+
+
+//$sessao->add("Usuario", 'Chris');
+//$sessao->del();
 
 include 'rotas.php';
 
-$contexto = new RequestContext(); // coringa(); no lugar de request
-$contexto->fromRequest(Request::createFromGlobals());
+$request = Request::createFromGlobals();
+$contexto = new RequestContext();
+$contexto->fromRequest($request);
 
 $response = Response::create();
 
 
 $matcher = new UrlMatcher($rotas, $contexto);
-//print_r($matcher->match('/esporte'));
+//print_r($contexto->getPathInfo());
 
-$loader = new FilesystemLoader(__DIR__.'/View');
+$loader = new FilesystemLoader(__DIR__ . '/View');
 $environment = new Environment($loader);
-        
+//$environment->addGlobal('session', $_SESSION);
+
 try {
-    $atributos = $matcher->match($contexto->getPathInfo()); //pega a url 
-    
+    $atributos = $matcher->match($contexto->getPathInfo());
+    //print_r($atributos);
+    //return;
+
     $controller = $atributos['_controller'];
-    
     $method = $atributos['method'];
-    
-    if(isset ($atributos['sufix']))
-        $parametros=$atributos['sufix'];
+    //print_r($method);
+    //return;
+    if (isset($atributos['suffix']))
+        $parametros = $atributos['suffix'];
     else
-        $parametros='';
+        $parametros = '';
     
-    
-    $obj = new $controller($response, $contexto, $environment);
-    
-    $obj->$method($parametros = '');
-    
+    $obj = new $controller($response, $request, $environment, $sessao);
+    $obj->$method($parametros);
 } catch (Exception $ex) {
-    
-    $response->SetContent('Not Found 404', Response::HTTP_NOT_FOUND);
-    
+    $response->setContent('Not found fde', Response::HTTP_NOT_FOUND);
 }
 
-//print_r($matcher->($contexto->getPathInfo()));
-//$conteudo = 'asdasdasdasd';
-//$response->setContent($conteudo);
 $response->send();
+
+
+
+
+
+
+
