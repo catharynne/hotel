@@ -25,7 +25,7 @@ class ControllerIndex {
     }
 
     public function index(){
-        print_r("aguinaldo sou eu...");
+        return $this->response->setContent($this->twig->render('welcome.twig'));
     }
     public function show() {
         if ($this->sessao->existe('Usuario'))
