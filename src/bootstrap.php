@@ -19,7 +19,6 @@ $sessao->start();
 //$sessao->del();
 //print_r($sessao->get('Usuario'));
 include 'rotas.php';
-
 $request = Request::createFromGlobals();
 $contexto = new RequestContext();
 $contexto->fromRequest($request);
@@ -32,7 +31,12 @@ $matcher = new UrlMatcher($rotas, $contexto);
 
 $loader = new FilesystemLoader(__DIR__ . '/View');
 $environment = new Environment($loader);
-//$environment->addGlobal('session', $_SESSION);
+if(isset($_SESSION['ppi2'])){
+    if(isset($_SESSION['ppi2']['usuario']))
+    $environment->addGlobal('usuario', $_SESSION['ppi2']['usuario']);
+}else{
+    $environment->addGlobal('usuario',null);
+}
 
 try {
     $atributos = $matcher->match($contexto->getPathInfo());

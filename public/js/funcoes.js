@@ -36,10 +36,13 @@ $(document).ready(function () {
                 senha: senha,
             },
             success: function (dados) {
+                //alert(dados);
                 if(dados == "errologin"){
                     $("#div_retorno").html("Usuário ou senha inválido.");
+                }else if(dados == "admin"){
+                    window.location.href = "/admin";
                 }else{
-                    window.location.href = "/produtos";
+                    window.location.href = "/";
                 }
             },
             beforeSend: function () {

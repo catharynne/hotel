@@ -6,8 +6,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Twig\Environment;
-use PPI2\Entidades\Produto;
-use PPI2\Modelos\ModeloProdutos;
 use PPI2\Modelos\UsuarioModelo;
 use PPI2\Util\Sessao;
 
@@ -35,26 +33,44 @@ class ControllerUsuario {
             
         }
     }
-
+    public function index() {
+        if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
+            $usuarios = new UsuarioModelo();
+            $usuarios = $usuarios->listarUsuarios();
+            return $this->response->setContent($this->twig->render('usuario/index.php',['usuarios' => $usuarios]));
+        }
+        else{
+            $destino = '/';
+            $redirecionar = new RedirectResponse($destino);
+            $redirecionar->send();
+            
+        }
+    }
     public function validaLogin(){
         //validação via AJAX com method = POST da página welcome.php
         $email = $this->contexto->get('email');
         $senha = $this->contexto->get('senha');
         $usuarioModelo = new UsuarioModelo();
         $usuario = $usuarioModelo->validaUsuario($email,$senha);
-        //se tiver o usuário cadastrado no banco
+        //se tiver o usuário cadastrado no banco e a senha estiver correta.
         if($usuario != null){
             //passa o usuário para a sessão.
             $this->sessao->add('usuario',$usuario);
+            if($usuario['tipo'] == 'Administrador'){
+                echo('admin');
+                return;
+            }
         }else{
-            //Usuário não encontrado, retorna para welcome.php e mostra o erro de usuário ou senha.
+            //Usuário não encontrado, ou senha errada, retorna para welcome.php e mostra o erro de usuário ou senha.
             echo('errologin');
             return;
         }
 
     }
     public function logout(){
+        //remove a chave['ppi2'] e inválida a sessão.
         $this->sessao->del();
+        //redireciona para raiz '/'.
         $re = new RedirectResponse('/');
         $re->send();
     }

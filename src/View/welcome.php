@@ -4,13 +4,13 @@
 
 {% block conteudo %}
 {{ parent() }}
+
 <div class="row">
 	<div class="col-md-8">
-		<h1 class="text-center text-success">
-			Raul Shauber<br>detonando em<br>Nova York.
-		</h1>
+		<h1>RAUL </h1>
 
 	</div>
+	{% if usuario is empty %}
 	<div class="col-md-4">
 		<div class="form-group">
 			<label for="email">Email</label>
@@ -32,6 +32,7 @@
 			<img src="img/ajax-loader.gif" />
 		</div>
 	</div>	
+	{% endif%}
 </div>
 {% endblock %}
 

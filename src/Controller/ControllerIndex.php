@@ -25,7 +25,8 @@ class ControllerIndex {
     }
 
     public function index(){
-        return $this->response->setContent($this->twig->render('welcome.php'));
+        $usuario = $this->sessao->get('usuario');
+        return $this->response->setContent($this->twig->render('welcome.php',['usuario' => $usuario]));
     }
     public function show() {
         if ($this->sessao->existe('Usuario'))

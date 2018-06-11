@@ -17,6 +17,12 @@ $rotas->add('esporte', new Route('/esportes/{suffix}',
 $rotas->add('validaLogin', new Route('/validaLogin',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'validaLogin')));
+$rotas->add('admin', new Route('/admin',
+        array('_controller' => 'PPI2\Controller\ControllerAdmin',
+            "method" => 'index')));
+$rotas->add('admin/usuario', new Route('/admin/usuario',
+        array('_controller' => 'PPI2\Controller\ControllerUsuario',
+            "method" => 'index')));
 $rotas->add('logout', new Route('/logout',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'logout')));

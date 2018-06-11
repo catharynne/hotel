@@ -15,10 +15,10 @@ class UsuarioModelo {
     function listarUsuarios() {
 
         try {
-            $sql = 'select * from usuario';
+            $sql = 'select * from usuario order by nome';
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->execute();
-            return $p_sql->fetchAll(PDO::FETCH_OBJ);
+            return $p_sql->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $ex) {
             return 'deu erro na conexão:' . $ex;
         }
