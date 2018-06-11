@@ -6,13 +6,15 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-      <a class="navbar-brand" href="#">WebSiteName</a>
+      <a class="navbar-brand" href="#">PPI2</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
       {% if usuario is not empty and usuario['tipo'] =='Administrador' %}
-        <li class="active"><a href="#">Agenda</a></li>
+        <li class="active"><a href="/admin">Dashboard</a></li>
         <li class=""><a href="/admin/usuario">Usuários</a></li>
+        <li class=""><a href="/admin/usuario">Categorias</a></li>
+        <li class=""><a href="/admin/usuario">Agendas</a></li>
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
           <ul class="dropdown-menu">

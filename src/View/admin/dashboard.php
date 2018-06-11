@@ -11,4 +11,5 @@
 {% endblock %}
 
 {% block rodape %}
+{{ parent() }}
 {% endblock %}

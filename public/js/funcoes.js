@@ -60,6 +60,10 @@ $(document).ready(function () {
         });
     });
 });
+function searchUsuario(value){
+    alert(value);
+    return;
+}
 $(document).ready(function () {
     $("#formCadastro").submit(function (e) {
        e.preventDefault(); // evita que o formulário seja submetido

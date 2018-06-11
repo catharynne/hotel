@@ -46,6 +46,17 @@ class ControllerUsuario {
             
         }
     }
+    public function create() {
+        if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
+            return $this->response->setContent($this->twig->render('usuario/novo.php'));
+        }
+        else{
+            $destino = '/';
+            $redirecionar = new RedirectResponse($destino);
+            $redirecionar->send();
+            
+        }
+    }
     public function validaLogin(){
         //validação via AJAX com method = POST da página welcome.php
         $email = $this->contexto->get('email');
