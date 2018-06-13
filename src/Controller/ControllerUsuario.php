@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Twig\Environment;
 use PPI2\Modelos\UsuarioModelo;
 use PPI2\Util\Sessao;
+use PPI2\Validacao\ValidaCPFCNPJ;
+use PPI2\Entidades\Usuario;
 
 class ControllerUsuario {
 
@@ -56,6 +58,49 @@ class ControllerUsuario {
             $redirecionar->send();
             
         }
+    }
+    public function salvar(){
+        $erro = [];
+        $email = $this->contexto->get('email');
+        $senha = $this->contexto->get('senha');
+        $nome = $this->contexto->get('nome');
+        $cpf = $this->contexto->get('cpf');
+        $telefone = $this->contexto->get('telefone');
+        $verificaCpf = new ValidaCPFCNPJ($cpf);
+        $verificaCpf = $verificaCpf->valida();
+        if(!$verificaCpf){
+            $erro['cpf'] = "cpf inválido!";
+            echo json_encode($erro);
+            return;
+        }
+        $usuarioModelo = new UsuarioModelo();
+        $usuario = $usuarioModelo->consultaCpf($cpf);
+        if($usuario != null){
+            $erro['cpf'] ="Cpf já está cadastrado!";
+            echo json_encode($erro);
+            return;
+        }
+        $usuario = $usuarioModelo->consultaEmail($email);
+        if($usuario != null){
+            $erro['email'] ="Email já está cadastrado!";
+            echo json_encode($erro);
+            return;
+        }
+        $usuarioEntidade = new Usuario();
+        $usuarioEntidade->setNome($nome);
+        $usuarioEntidade->setTelefone($telefone);
+        $usuarioEntidade->setCpf($cpf);
+        $usuarioEntidade->setEmail($email);
+        $usuarioEntidade->setSenha($senha);
+        $usuarioEntidade->setTipoUsuario(2);
+        if($usuarioModelo->cadastrar($usuarioEntidade) > 0){
+            $erro['cadastro'] = "ok";
+            echo json_encode($erro);
+            return;
+        }
+        $erro['cadastro'] = "erro";
+        echo json_encode($erro);
+        return;
     }
     public function validaLogin(){
         //validação via AJAX com method = POST da página welcome.php

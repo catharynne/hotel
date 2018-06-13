@@ -26,6 +26,9 @@ $rotas->add('admin/usuario', new Route('/admin/usuario',
 $rotas->add('admin/usuario/novo', new Route('/admin/usuario/novo',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'create')));
+$rotas->add('usuario/salvar', new Route('/usuario/salvar',
+        array('_controller' => 'PPI2\Controller\ControllerUsuario',
+            "method" => 'salvar')));
 $rotas->add('logout', new Route('/logout',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'logout')));

@@ -3,7 +3,7 @@
 namespace PPI2\Modelos;
 
 use PPI2\Util\Conexao;
-use PPI2\Entidades\Produto;
+use PPI2\Entidades\Usuario;
 use PDO;
 
 class UsuarioModelo {
@@ -55,13 +55,46 @@ class UsuarioModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
-    function cadastrar(Produto $produto) {
+    function consultaCpf($cpf) {
+        try {
+            $sql = 'select * from usuario where cpf = :cpf';
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':cpf',$cpf);
+            $p_sql->execute();
+            if ($p_sql->rowCount() > 0) {
+                return $p_sql->fetch(PDO::FETCH_ASSOC);
+            }
+            return null;
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
+    function consultaEmail($email) {
+        try {
+            $sql = 'select * from usuario where email = lower(:email)';
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':email',$email);
+            $p_sql->execute();
+            if ($p_sql->rowCount() > 0) {
+                return $p_sql->fetch(PDO::FETCH_ASSOC);
+            }
+            return null;
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
+    function cadastrar(Usuario $usuario) {
 
         try {
-            $sql = 'insert into produtos (descricao, preco) values(:descricao, :preco)';
+            $sql = 'insert into usuario (nome, cpf,telefone,email,tipousuario,senha) values 
+            (upper(:nome), :cpf,:telefone,lower(:email),:tipousuario,md5(:senha))';
             $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':descricao', $produto->getDescricao());
-            $p_sql->bindValue(':preco', $produto->getPreco());
+            $p_sql->bindValue(':nome', $usuario->getNome());
+            $p_sql->bindValue(':cpf', $usuario->getCpf());
+            $p_sql->bindValue(':telefone', $usuario->getTelefone());
+            $p_sql->bindValue(':email', $usuario->getEmail());
+            $p_sql->bindValue(':tipousuario', $usuario->getTipoUsuario());
+            $p_sql->bindValue(':senha', $usuario->getSenha());
             if ($p_sql->execute())
                 return Conexao::getInstancia()->lastInsertId();
             return null;
