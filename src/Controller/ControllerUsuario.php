@@ -36,9 +36,16 @@ class ControllerUsuario {
         }
     }
     public function index() {
+        $busca = $this->contexto->get('busca');
         if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
             $usuarios = new UsuarioModelo();
-            $usuarios = $usuarios->listarUsuarios();
+            if(isset($busca)){
+                $usuarios = $usuarios->procurarUsuarios($busca);
+                echo json_encode($usuarios);
+                return;
+            }else{
+                $usuarios = $usuarios->listarUsuarios();    
+            }
             return $this->response->setContent($this->twig->render('usuario/index.php',['usuarios' => $usuarios]));
         }
         else{

@@ -23,6 +23,28 @@ class UsuarioModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
+    function procurarUsuarios($key) {
+        try {
+            $lista = [];
+            if($key == ""){
+                $sql = 'select * from usuario order by nome';
+            }else{
+                $sql = "select * from usuario where nome LIKE :pal or cpf LIKE :pal or telefone LIKE :pal or email LIKE :pal order by nome";
+            }
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            if($key != ""){
+                $p_sql->bindValue(':pal',"%".$key."%");
+            }
+            $p_sql->execute();
+            $rows = $p_sql->fetchAll(PDO::FETCH_OBJ);
+            foreach ($rows as $key => $row) {
+                $lista[] = $row;
+            }
+            return $lista;
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
 
     function validaUsuario($email,$senha){
         try{

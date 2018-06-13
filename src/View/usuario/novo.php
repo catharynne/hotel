@@ -28,7 +28,7 @@
 			<button class="btn btn-success" id="btnSalvarUsuario">Salvar</button>
 			<a href="/admin/usuario" class="btn btn-danger">Cancelar</a>
 			<div id="processando" style="display: none;">
-			<img src="/img/ajax-loader.gif" />
+				<img src="/img/ajax-loader.gif" />
 			</div>
 		</div>
 	</div>

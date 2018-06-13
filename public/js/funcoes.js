@@ -183,12 +183,89 @@ $("#btnAtualizarUsuario").click(function () {
             }
         });
 });
+function refreshTable() {
+    var value = "";
+    $.ajax({
+        type: 'GET',
+        url: '/admin/usuario',
+        data: {
+            busca: value
+        },
+        success: function (data) {
+            var usuarios = JSON.parse(data);
+            if (usuarios) {
+                fillTable(usuarios);
+            }
+//            console.log(inf);
+        }
+    }).done(function (info) {
+        
+    });
+
+}
+$("#pesquisa").on('keyup', function (e) {
+
+    if (e.keyCode === 27 || e.keyCode === 13 || (e.keyCode == 8 && $("#pesquisa").val().length < 1) ){
+        $("#pesquisa").val("");
+        refreshTable();
+    } 
+        
+});
 function searchUsuario(value){
     if (value.length < 1) {
         return;
     }
-    alert(value);
-    return;
+    //var str = "'%" + value + "%'";
+    $.ajax({
+        type: 'GET',
+        url: '/admin/usuario',
+        data: {
+            busca: value
+        },
+        success: function (dados) {
+            try {
+                var usuarios = JSON.parse(dados);
+//            console.log(inf);
+                if (usuarios[0]) {
+                    fillTable(usuarios);
+                }else{
+                    $("#conteudo").html("");
+                    $("#detalhes").html("Nenhum registor encontrado.");
+                }
+            } catch (err) {
+                alert("Nenhum registro encontrado com o texto " + texto);
+                $("#pesquisa").val("");
+                $("#conteudo").html("");
+            }
+        },
+        beforeSend: function () {
+            $("#processando").css({display: "block"});
+        },
+        complete: function () {
+            $("#processando").css({display: "none"});
+        },
+        error: function () {
+            $("#div_retorno").html("Erro em chamar a função.");
+            setTimeout(function () {
+                $("#div_retorno").css({display: "none"});
+            }, 5000);
+        }
+    });
+}
+function fillTable(row) {
+    $("#conteudo").html("");
+    for (var i in row) {
+        $("#conteudo").append("<tr><td>" + row[i].id +"</td>"+
+                "<td>" + row[i].nome + "</td><td>" + row[i].email + "</td><td>" + row[i].cpf + "</td>" +
+                "<td>" + row[i].telefone + "</td>"+
+                "<td><a class='btn btn-warning glyphicon glyphicon-pencil btn-xs' href='/admin/usuario/editar/" + row[i].id + "'></td>" +
+                "</tr>");
+        if (row.length > 0) {
+            $("#detalhes").html("Total de: " + row.length + " registro(s).");
+        } else {
+            $("#detalhes").html("Nenhum registor encontrado.");
+        }
+    }
 }
 $(document).ready(function () {
     $("#formCadastro").submit(function (e) {
