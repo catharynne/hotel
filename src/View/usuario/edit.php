@@ -22,7 +22,7 @@
 			<input type="text" class="form-control" id="telefone" name="telefone" required value="{{usuario['telefone']}}">
 			<div class="input-group">
 			<label class="control-label">Permissão</label>
-			<select id="category_id" name="tipousuario" class="input-group btn btn-primary btn-block">
+			<select id="tipousuario" name="tipousuario" class="input-group btn btn-primary btn-block">
 				{% if permissoes is not empty %}
 				{% for permissao in permissoes %}
 				{% if usuario['tipousuario'] == permissao['id'] %}

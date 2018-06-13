@@ -130,6 +130,7 @@ $("#btnAtualizarUsuario").click(function () {
     nome = $("#nome").val();
     telefone = $("#telefone").val();
     cpf = $("#cpf").val();
+    tipousuario = $("#tipousuario").val();
     if(email == "" || nome == "" || telefone == "" || cpf == ""){
         alert("Todos os campos são de preenchimento obrigatório");
         return;
@@ -142,7 +143,8 @@ $("#btnAtualizarUsuario").click(function () {
             nome: nome,
             email: email,
             telefone: telefone,
-            cpf: cpf
+            cpf: cpf,
+            tipousuario: tipousuario
         },
         success: function (dados) {
             erro = JSON.parse(dados);

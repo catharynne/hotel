@@ -1,6 +1,8 @@
 <?php
 
 namespace PPI2\Entidades;
+use PPI2\Modelos\UsuarioModelo;
+use PPI2\Entidades\Usuario;
 
 class Agenda {
     
@@ -16,7 +18,7 @@ class Agenda {
     
     
     function __construct() {
-        
+        //$this->cliente = new Usuario();
     }
     
     function getId() {

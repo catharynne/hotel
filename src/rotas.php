@@ -54,6 +54,24 @@ $rotas->add('categoria/atualizar', new Route('/categoria/atualizar',
         array('_controller' => 'PPI2\Controller\ControllerCategoria',
             "method" => 'atualizar')));
 //-------FIM ROTAS CATEGORIA
+//-------INICIO ROTAS AGENDA
+$rotas->add('admin/agenda', new Route('/admin/categoria',
+        array('_controller' => 'PPI2\Controller\ControllerAgenda',
+            "method" => 'index')));
+$rotas->add('admin/agenda/novo', new Route('/admin/agenda/novo',
+        array('_controller' => 'PPI2\Controller\ControllerAgenda',
+            "method" => 'create')));
+
+$rotas->add('admin/agenda/editar', new Route('/admin/agenda/editar/{suffix}',
+        array('_controller' => 'PPI2\Controller\ControllerAgenda',"method" => 'editar', 'suffix' => '')));
+
+$rotas->add('categoria/salvar', new Route('/agenda/salvar',
+        array('_controller' => 'PPI2\Controller\ControllerAgenda',
+            "method" => 'salvar')));
+$rotas->add('categoria/atualizar', new Route('/agenda/atualizar',
+        array('_controller' => 'PPI2\Controller\ControllerAgenda',
+            "method" => 'atualizar')));
+//-------FIM ROTAS AGENDA
 $rotas->add('logout', new Route('/logout',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'logout')));
