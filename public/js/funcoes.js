@@ -277,6 +277,63 @@ $("#btnAtualizarCategoria").click(function () {
         }
     });
 });
+$("#btnSalvarAgenda").click(function () {
+    titulo = $("#titulo").val();
+    assunto = $("#assunto").val();
+    data = $("#data").val();
+    hora = $("#hora").val();
+    categoria = $("#categoria").val();
+    cliente = $("#cliente").val();
+    if(titulo == "" || assunto == "" || data == "" || hora == "" || cliente <= 0 || categoria <= 0){
+        alert("Todos os campos são de preenchimento obrigatório");
+        return;
+    }
+    $.ajax({
+        type: 'POST',
+        url: '/agenda/salvar',
+        data: {
+            titulo: titulo,
+            assunto: assunto,
+            data: data,
+            hora: hora,
+            cliente: cliente,
+            categoria: categoria
+        },
+        success: function (dados) {
+            erro = JSON.parse(dados);
+            if(erro){
+                /*if(erro.cpf){
+                    alert(erro.cpf);
+                    return;
+                }
+                if(erro.email){
+                    alert(erro.email);
+                    return;
+                }
+                if(erro.cadastro == "ok"){
+                    alert("Usuário cadastrada com sucesso...");
+                    window.location.href = "/admin/usuario";
+                    return;
+                }else if(erro.cadastro == "erro"){
+                    alert("Algo deu errado no database");
+                    return;
+                }*/
+            }
+        },
+        beforeSend: function () {
+            $("#processando").css({display: "block"});
+        },
+        complete: function () {
+            $("#processando").css({display: "none"});
+        },
+        error: function () {
+            $("#div_retorno").html("Erro em chamar a função.");
+            setTimeout(function () {
+                $("#div_retorno").css({display: "none"});
+            }, 5000);
+        }
+    });
+});
 function refreshTable() {
     var value = "";
     $.ajax({

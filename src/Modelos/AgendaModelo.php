@@ -15,7 +15,8 @@ class AgendaModelo {
     function listar() {
 
         try {
-            $sql = 'select * from agenda order by data,hora asc';
+            $sql = "select a.*,u.nome,c.descricao from agenda as a,usuario as u, categoria as c 
+            where a.cliente = u.id and a.categoria = c.id order by a.data, a.hora";
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->execute();
             return $p_sql->fetchAll(PDO::FETCH_ASSOC);
@@ -77,11 +78,12 @@ class AgendaModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
-    function consultaCpf($cpf) {
+    function consultaDataHora($d,$h) {
         try {
-            $sql = 'select * from usuario where cpf = :cpf';
+            $sql = 'select * from agenda where data = :d and hora = :h';
             $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':cpf',$cpf);
+            $p_sql->bindValue(':d',$d);
+            $p_sql->bindValue(':h',$h);
             $p_sql->execute();
             if ($p_sql->rowCount() > 0) {
                 return $p_sql->fetch(PDO::FETCH_ASSOC);
@@ -149,18 +151,20 @@ class AgendaModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
-    function cadastrar(Usuario $usuario) {
+    function cadastrar(Agenda $agenda) {
 
         try {
-            $sql = 'insert into usuario (nome, cpf,telefone,email,tipousuario,senha) values 
-            (upper(:nome), :cpf,:telefone,lower(:email),:tipousuario,md5(:senha))';
+            $sql = 'insert into agenda (titulo, assunto,data,hora,cliente,categoria,admin,status) values 
+            (upper(:titulo), :assunto,:data,:hora,:cliente,:categoria,:admin,:status)';
             $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':nome', $usuario->getNome());
-            $p_sql->bindValue(':cpf', $usuario->getCpf());
-            $p_sql->bindValue(':telefone', $usuario->getTelefone());
-            $p_sql->bindValue(':email', $usuario->getEmail());
-            $p_sql->bindValue(':tipousuario', $usuario->getTipoUsuario());
-            $p_sql->bindValue(':senha', $usuario->getSenha());
+            $p_sql->bindValue(':titulo', $agenda->getTitulo());
+            $p_sql->bindValue(':assunto', $agenda->getAssunto());
+            $p_sql->bindValue(':data', $agenda->getData());
+            $p_sql->bindValue(':hora', $agenda->getHora());
+            $p_sql->bindValue(':cliente', $agenda->getCliente());
+            $p_sql->bindValue(':categoria', $agenda->getCategoria());
+            $p_sql->bindValue(':admin', $agenda->getAdmin());
+            $p_sql->bindValue(':status', $agenda->getStatus());
             if ($p_sql->execute())
                 return Conexao::getInstancia()->lastInsertId();
             return null;

@@ -24,15 +24,21 @@ DROP TABLE IF EXISTS `agenda`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `agenda` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `titulo` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `assunto` text COLLATE utf8_unicode_ci NOT NULL,
+  `status` tinyint(1) DEFAULT '1',
+  `data` date NOT NULL,
+  `hora` time NOT NULL,
   `cliente` int(11) DEFAULT NULL,
+  `admin` int(11) DEFAULT NULL,
   `categoria` int(11) DEFAULT NULL,
-  `data` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `comentario` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `cliente` (`cliente`),
+  KEY `admin` (`admin`),
   KEY `categoria` (`categoria`),
   CONSTRAINT `agenda_ibfk_1` FOREIGN KEY (`cliente`) REFERENCES `usuario` (`id`),
-  CONSTRAINT `agenda_ibfk_2` FOREIGN KEY (`categoria`) REFERENCES `categoria` (`id`)
+  CONSTRAINT `agenda_ibfk_2` FOREIGN KEY (`admin`) REFERENCES `usuario` (`id`),
+  CONSTRAINT `agenda_ibfk_3` FOREIGN KEY (`categoria`) REFERENCES `categoria` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -56,7 +62,7 @@ CREATE TABLE `categoria` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `descricao` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,6 +71,7 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
+INSERT INTO `categoria` VALUES (1,'CUVA'),(2,'DENTISTA'),(3,'SOMBRA'),(4,'SUMULA');
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,7 +117,7 @@ CREATE TABLE `usuario` (
   PRIMARY KEY (`id`),
   KEY `tipousuario` (`tipousuario`),
   CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`tipousuario`) REFERENCES `tipo_usuario` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -119,7 +126,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'Raul Shauber','admin@admin.com','00000000000','21232f297a57a5a743894a0e4a801fc3','000999999999',1),(2,'Usuario Comum','usuario@usuario.com','00000000001','f8032d5cae3de20fcec887f395ec9a6a','000999999999',1);
+INSERT INTO `usuario` VALUES (1,'RAUL SHAUBER','admin@admin.com','06104510655','21232f297a57a5a743894a0e4a801fc3','00099999999',1),(2,'Usuario Comum','usuario@usuario.com','00000000001','f8032d5cae3de20fcec887f395ec9a6a','000999999999',2),(3,'JANAINA MEDEIROS DA SILVA','janaina@gmail.com','12400875600','e10adc3949ba59abbe56e057f20f883e','38998982005',2),(4,'CARLOS ROBERTO DA SILVEIRA','carlo@gmail.com','81856568270','e10adc3949ba59abbe56e057f20f883e','38998982005',2),(5,'MARCELO DE NOBREBA','marcelo@gmail.com','64286168581','e10adc3949ba59abbe56e057f20f883e','38998982005',2),(6,'VANESSA RIBEIRO DA SILVA','vanessa@hotmail.com','81459394615','e10adc3949ba59abbe56e057f20f883e','38999898989',2);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -132,4 +139,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-09 19:08:23
+-- Dump completed on 2018-06-13 15:15:26

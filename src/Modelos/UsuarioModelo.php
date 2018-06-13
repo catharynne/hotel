@@ -49,7 +49,7 @@ class UsuarioModelo {
     function validaUsuario($email,$senha){
         try{
             $sql = "select usuario.id, usuario.nome, usuario.email, usuario.telefone, usuario.cpf, 
-            tipo_usuario.tipo from usuario, tipo_usuario where usuario.email = lower(:email) 
+            usuario.tipousuario, tipo_usuario.tipo from usuario, tipo_usuario where usuario.email = lower(:email) 
             and usuario.senha = md5(:senha) and tipo_usuario.id = usuario.tipousuario limit 1;";
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->bindValue(':email',$email);

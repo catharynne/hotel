@@ -63,39 +63,37 @@ class ControllerAgenda {
     }
     public function salvar(){
         $erro = [];
-        $email = $this->contexto->get('email');
-        $senha = $this->contexto->get('senha');
-        $nome = $this->contexto->get('nome');
-        $cpf = preg_replace('/\D/', '', $this->contexto->get('cpf'));
-        $telefone = preg_replace('/\D/', '', $this->contexto->get('telefone'));
-        $verificaCpf = new ValidaCPFCNPJ($cpf);
-        $verificaCpf = $verificaCpf->valida();
-        if(!$verificaCpf){
-            $erro['cpf'] = "cpf inválido!";
+        $titulo = $this->contexto->get('titulo');
+        $assunto = $this->contexto->get('assunto');
+        $data = $this->contexto->get('data');
+        $hora = $this->contexto->get('hora').':00';
+        $categoria = $this->contexto->get('categoria');
+        $cliente = $this->contexto->get('cliente');
+        if (isset($data)) {
+            $date = $data;
+            $date = explode('/', $date);
+            $dia = $date[0];
+            $mes = $date[1];
+            $ano = $date[2];
+            $data = $ano . '-' . $mes . '-' . $dia;
+        }
+        $agendaModelo = new AgendaModelo();
+        $agenda = $agendaModelo->consultaDataHora($data,$hora);
+        if($agenda != null){
+            $erro['agenda'] ="Duplicidade de dia e hora!";
             echo json_encode($erro);
             return;
         }
-        $usuarioModelo = new AgendaModelo();
-        $usuario = $usuarioModelo->consultaCpf($cpf);
-        if($usuario != null){
-            $erro['cpf'] ="Cpf já está cadastrado!";
-            echo json_encode($erro);
-            return;
-        }
-        $usuario = $usuarioModelo->consultaEmail($email);
-        if($usuario != null){
-            $erro['email'] ="Email já está cadastrado!";
-            echo json_encode($erro);
-            return;
-        }
-        $usuarioEntidade = new Usuario();
-        $usuarioEntidade->setNome(trim($nome));
-        $usuarioEntidade->setTelefone(trim($telefone));
-        $usuarioEntidade->setCpf(trim($cpf));
-        $usuarioEntidade->setEmail(trim($email));
-        $usuarioEntidade->setSenha($senha);
-        $usuarioEntidade->setTipoUsuario(2);
-        if($usuarioModelo->cadastrar($usuarioEntidade) > 0){
+        $agendaEntidade = new Agenda();
+        $agendaEntidade->setTitulo(trim($titulo));
+        $agendaEntidade->setAssunto(trim($assunto));
+        $agendaEntidade->setData(trim($data));
+        $agendaEntidade->setHora(trim($hora));
+        $agendaEntidade->setCliente($cliente);
+        $agendaEntidade->setCategoria($categoria);
+        $agendaEntidade->setStatus(1);
+        $agendaEntidade->setAdmin($this->sessao->get('usuario')['tipousuario']);
+        if($agendaModelo->cadastrar($agendaEntidade) > 0){
             $erro['cadastro'] = "ok";
             echo json_encode($erro);
             return;

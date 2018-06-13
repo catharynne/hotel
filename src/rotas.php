@@ -55,7 +55,7 @@ $rotas->add('categoria/atualizar', new Route('/categoria/atualizar',
             "method" => 'atualizar')));
 //-------FIM ROTAS CATEGORIA
 //-------INICIO ROTAS AGENDA
-$rotas->add('admin/agenda', new Route('/admin/categoria',
+$rotas->add('admin/agenda', new Route('/admin/agenda',
         array('_controller' => 'PPI2\Controller\ControllerAgenda',
             "method" => 'index')));
 $rotas->add('admin/agenda/novo', new Route('/admin/agenda/novo',
