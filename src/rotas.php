@@ -36,6 +36,24 @@ $rotas->add('usuario/salvar', new Route('/usuario/salvar',
 $rotas->add('usuario/atualizar', new Route('/usuario/atualizar',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'atualizar')));
+//-------INICIO ROTAS CATEGORIA
+$rotas->add('admin/categoria', new Route('/admin/categoria',
+        array('_controller' => 'PPI2\Controller\ControllerCategoria',
+            "method" => 'index')));
+$rotas->add('admin/categoria/novo', new Route('/admin/categoria/novo',
+        array('_controller' => 'PPI2\Controller\ControllerCategoria',
+            "method" => 'create')));
+
+$rotas->add('admin/categoria/editar', new Route('/admin/categoria/editar/{suffix}',
+        array('_controller' => 'PPI2\Controller\ControllerCategoria',"method" => 'editar', 'suffix' => '')));
+
+$rotas->add('categoria/salvar', new Route('/categoria/salvar',
+        array('_controller' => 'PPI2\Controller\ControllerCategoria',
+            "method" => 'salvar')));
+$rotas->add('categoria/atualizar', new Route('/categoria/atualizar',
+        array('_controller' => 'PPI2\Controller\ControllerCategoria',
+            "method" => 'atualizar')));
+//-------FIM ROTAS CATEGORIA
 $rotas->add('logout', new Route('/logout',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'logout')));

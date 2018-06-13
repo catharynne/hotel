@@ -20,15 +20,31 @@
 			<input type="text" class="form-control" id="cpf" name="cpf" required value="{{usuario['cpf']}}">
 			<label class="control-label">Telefone</label>
 			<input type="text" class="form-control" id="telefone" name="telefone" required value="{{usuario['telefone']}}">
-		</div>
-		<div class="text-center">
-			<button class="btn btn-success" id="btnAtualizarUsuario">Atualizar</button>
-			<a href="/admin/usuario" class="btn btn-danger">Cancelar</a>
-			<div id="processando" style="display: none;">
-				<img src="/img/ajax-loader.gif" />
-			</div>
+			<div class="input-group">
+			<label class="control-label">Permissão</label>
+			<select id="category_id" name="tipousuario" class="input-group btn btn-primary btn-block">
+				{% if permissoes is not empty %}
+				{% for permissao in permissoes %}
+				{% if usuario['tipousuario'] == permissao['id'] %}
+				<option selected="" value="{{permissao['id']}}">{{permissao['tipo']}}</option>
+				{% else %}
+				<option value="{{permissao['id']}}">{{permissao['tipo']}}</option>
+				{% endif %}
+				{% endfor %}
+				{% endif %}
+
+			</select>
+
 		</div>
 	</div>
+	<div class="text-center">
+		<button class="btn btn-success" id="btnAtualizarUsuario">Atualizar</button>
+		<a href="/admin/usuario" class="btn btn-danger">Cancelar</a>
+		<div id="processando" style="display: none;">
+			<img src="/img/ajax-loader.gif" />
+		</div>
+	</div>
+</div>
 </div>
 {% endblock %}
 

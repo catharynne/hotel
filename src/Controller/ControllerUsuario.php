@@ -10,6 +10,7 @@ use PPI2\Modelos\UsuarioModelo;
 use PPI2\Util\Sessao;
 use PPI2\Validacao\ValidaCPFCNPJ;
 use PPI2\Entidades\Usuario;
+use PPI2\Modelos\TipoUsuarioModelo;
 
 class ControllerUsuario {
 
@@ -94,10 +95,10 @@ class ControllerUsuario {
             return;
         }
         $usuarioEntidade = new Usuario();
-        $usuarioEntidade->setNome($nome);
-        $usuarioEntidade->setTelefone($telefone);
-        $usuarioEntidade->setCpf($cpf);
-        $usuarioEntidade->setEmail($email);
+        $usuarioEntidade->setNome(trim($nome));
+        $usuarioEntidade->setTelefone(trim($telefone));
+        $usuarioEntidade->setCpf(trim($cpf));
+        $usuarioEntidade->setEmail(trim($email));
         $usuarioEntidade->setSenha($senha);
         $usuarioEntidade->setTipoUsuario(2);
         if($usuarioModelo->cadastrar($usuarioEntidade) > 0){
@@ -117,10 +118,12 @@ class ControllerUsuario {
             $redirecionar->send();
             return;   
         }
+        $tipoUsuarioModelo = new TipoUsuarioModelo();
+        $tipoUsuario = $tipoUsuarioModelo->listar();
         $usuarioModelo = new UsuarioModelo();
         $usuario = $usuarioModelo->consultaId($id);
         if($usuario != null){
-            return $this->response->setContent($this->twig->render('usuario/edit.php',['usuario' => $usuario]));    
+            return $this->response->setContent($this->twig->render('usuario/edit.php',['usuario' => $usuario,'permissoes' => $tipoUsuario]));    
         }
         $destino = '/admin/usuario';
         $redirecionar = new RedirectResponse($destino);
@@ -132,6 +135,7 @@ class ControllerUsuario {
         $id = $this->contexto->get('idUsuario');
         $email = $this->contexto->get('email');
         $nome = $this->contexto->get('nome');
+        $tipo_usuario = $this->contexto->get('tipousuario');
         $cpf = preg_replace('/\D/', '', $this->contexto->get('cpf'));
         $telefone = preg_replace('/\D/', '', $this->contexto->get('telefone'));
         $verificaCpf = new ValidaCPFCNPJ($cpf);
@@ -164,11 +168,11 @@ class ControllerUsuario {
         }
         $usuarioEntidade = new Usuario();
         $usuarioEntidade->setId($id);
-        $usuarioEntidade->setNome($nome);
-        $usuarioEntidade->setTelefone($telefone);
-        $usuarioEntidade->setCpf($cpf);
-        $usuarioEntidade->setEmail($email);
-        $usuarioEntidade->setTipoUsuario(2);
+        $usuarioEntidade->setNome(trim($nome));
+        $usuarioEntidade->setTelefone(trim($telefone));
+        $usuarioEntidade->setCpf(trim($cpf));
+        $usuarioEntidade->setEmail(trim($email));
+        $usuarioEntidade->setTipoUsuario($tipo_usuario);
         if($usuarioModelo->atualizar($usuarioEntidade) > 0){
             $erro['cadastro'] = "ok";
             echo json_encode($erro);

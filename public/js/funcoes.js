@@ -168,20 +168,112 @@ $("#btnAtualizarUsuario").click(function () {
                     return;
                 }
             }
-            },
-            beforeSend: function () {
-                $("#processando").css({display: "block"});
-            },
-            complete: function () {
-                $("#processando").css({display: "none"});
-            },
-            error: function () {
-                $("#div_retorno").html("Erro em chamar a função.");
-                setTimeout(function () {
-                    $("#div_retorno").css({display: "none"});
-                }, 5000);
+        },
+        beforeSend: function () {
+            $("#processando").css({display: "block"});
+        },
+        complete: function () {
+            $("#processando").css({display: "none"});
+        },
+        error: function () {
+            $("#div_retorno").html("Erro em chamar a função.");
+            setTimeout(function () {
+                $("#div_retorno").css({display: "none"});
+            }, 5000);
+        }
+    });
+});
+$("#btnSalvarCategoria").click(function () {
+    desc = $("#descricao").val();
+    if(desc == ""){
+        alert("Todos os campos são de preenchimento obrigatório");
+        return;
+    }
+    $.ajax({
+        type: 'POST',
+        url: '/categoria/salvar',
+        data: {
+            descricao: desc
+        },
+        success: function (dados) {
+            erro = JSON.parse(dados);
+            if(erro){
+                if(erro.descricao){
+                    alert(erro.descricao);
+                    return;
+                }
+                if(erro.cadastro == "ok"){
+                    alert("Categoria cadastrada com sucesso...");
+                    window.location.href = "/admin/categoria";
+                    return;
+                }else if(erro.cadastro == "erro"){
+                    alert("Algo deu errado no database");
+                    return;
+                }
             }
-        });
+        },
+        beforeSend: function () {
+            $("#processando").css({display: "block"});
+        },
+        complete: function () {
+            $("#processando").css({display: "none"});
+        },
+        error: function () {
+            $("#div_retorno").html("Erro em chamar a função.");
+            setTimeout(function () {
+                $("#div_retorno").css({display: "none"});
+            }, 5000);
+        }
+    });
+});
+$("#btnAtualizarCategoria").click(function () {
+    desc = $("#descricao").val();
+    idCateg = $("#idCategoria").val();
+    if(desc == ""){
+        alert("Todos os campos são de preenchimento obrigatório");
+        return;
+    }
+    $.ajax({
+        type: 'POST',
+        url: '/categoria/atualizar',
+        data: {
+            idCategoria: idCateg,
+            descricao: desc
+        },
+        success: function (dados) {
+            erro = JSON.parse(dados);
+            if(erro){
+                if(erro.categ){
+                    alert("Categoria não encontrado...");
+                    return;
+                }
+                if(erro.descricao){
+                    alert(erro.descricao);
+                    return;
+                }
+                if(erro.cadastro == "ok"){
+                    alert("Categoria atualizado com sucesso...");
+                    window.location.href = "/admin/categoria";
+                    return;
+                }else if(erro.cadastro == "erro"){
+                    alert("Algo deu errado no database");
+                    return;
+                }
+            }
+        },
+        beforeSend: function () {
+            $("#processando").css({display: "block"});
+        },
+        complete: function () {
+            $("#processando").css({display: "none"});
+        },
+        error: function () {
+            $("#div_retorno").html("Erro em chamar a função.");
+            setTimeout(function () {
+                $("#div_retorno").css({display: "none"});
+            }, 5000);
+        }
+    });
 });
 function refreshTable() {
     var value = "";
@@ -196,10 +288,9 @@ function refreshTable() {
             if (usuarios) {
                 fillTable(usuarios);
             }
-//            console.log(inf);
         }
     }).done(function (info) {
-        
+
     });
 
 }
@@ -209,7 +300,7 @@ $("#pesquisa").on('keyup', function (e) {
         $("#pesquisa").val("");
         refreshTable();
     } 
-        
+
 });
 function searchUsuario(value){
     if (value.length < 1) {
@@ -225,7 +316,6 @@ function searchUsuario(value){
         success: function (dados) {
             try {
                 var usuarios = JSON.parse(dados);
-//            console.log(inf);
                 if (usuarios[0]) {
                     fillTable(usuarios);
                 }else{
@@ -256,14 +346,94 @@ function fillTable(row) {
     $("#conteudo").html("");
     for (var i in row) {
         $("#conteudo").append("<tr><td>" + row[i].id +"</td>"+
-                "<td>" + row[i].nome + "</td><td>" + row[i].email + "</td><td>" + row[i].cpf + "</td>" +
-                "<td>" + row[i].telefone + "</td>"+
-                "<td><a class='btn btn-warning glyphicon glyphicon-pencil btn-xs' href='/admin/usuario/editar/" + row[i].id + "'></td>" +
-                "</tr>");
+            "<td>" + row[i].nome + "</td><td>" + row[i].email + "</td><td>" + row[i].cpf + "</td>" +
+            "<td>" + row[i].telefone + "</td>"+
+            "<td><a class='btn btn-warning glyphicon glyphicon-pencil btn-xs' href='/admin/usuario/editar/" + row[i].id + "'></td>" +
+            "</tr>");
         if (row.length > 0) {
             $("#detalhes").html("Total de: " + row.length + " registro(s).");
         } else {
             $("#detalhes").html("Nenhum registor encontrado.");
+        }
+    }
+}
+function refreshTableCateg() {
+    var value = "";
+    $.ajax({
+        type: 'GET',
+        url: '/admin/categoria',
+        data: {
+            buscacateg: value
+        },
+        success: function (data) {
+            var categorias = JSON.parse(data);
+            if (categorias[0]) {
+                fillTableCateg(categorias);
+            }
+        }
+    }).done(function (info) {
+
+    });
+
+}
+$("#pesquisacateg").on('keyup', function (e) {
+
+    if (e.keyCode === 27 || e.keyCode === 13 || (e.keyCode == 8 && $("#pesquisacateg").val().length < 1) ){
+        $("#pesquisacateg").val("");
+        refreshTableCateg();
+    } 
+
+});
+function searchCateg(value){
+    if (value.length < 1) {
+        return;
+    }
+    $.ajax({
+        type: 'GET',
+        url: '/admin/categoria',
+        data: {
+            buscacateg: value
+        },
+        success: function (dados) {
+            try {
+                var categorias = JSON.parse(dados);
+                if (categorias[0]) {
+                    fillTableCateg(categorias);
+                }else{
+                    $("#conteudocateg").html("");
+                    $("#detalhescateg").html("Nenhum registor encontrado.");
+                }
+            } catch (err) {
+                alert("Nenhum registro encontrado com o texto " + texto);
+                $("#pesquisacateg").val("");
+                $("#conteudocateg").html("");
+            }
+        },
+        beforeSend: function () {
+            $("#processando").css({display: "block"});
+        },
+        complete: function () {
+            $("#processando").css({display: "none"});
+        },
+        error: function () {
+            $("#div_retorno").html("Erro em chamar a função.");
+            setTimeout(function () {
+                $("#div_retorno").css({display: "none"});
+            }, 5000);
+        }
+    });
+}
+function fillTableCateg(row) {
+    $("#conteudocateg").html("");
+    for (var i in row) {
+        $("#conteudocateg").append("<tr><td>" + row[i].id +"</td>"+
+            "<td>" + row[i].descricao + "</td>"+
+            "<td><a class='btn btn-warning glyphicon glyphicon-pencil btn-xs' href='/admin/categoria/editar/" + row[i].id + "'></td>" +
+            "</tr>");
+        if (row.length > 0) {
+            $("#detalhescateg").html("Total de: " + row.length + " registro(s).");
+        } else {
+            $("#detalhescateg").html("Nenhum registor encontrado.");
         }
     }
 }
