@@ -30,8 +30,8 @@
 					<td>{{usuario['email']}}</td>
 					<td>{{usuario['cpf']}}</td>
 					<td>{{usuario['telefone']}}</td>
-					<td><a href="#" class="btn btn-warning glyphicon glyphicon-pencil btn-xs"></a>
-					<a href="#" class="btn btn-danger glyphicon glyphicon-trash btn-xs"></a>
+					<td>
+					<a href="/admin/usuario/editar/{{usuario['id']}}" class="btn btn-warning glyphicon glyphicon-pencil btn-xs"></a>
 					</td>
 					</tr>
 				{% endfor %}

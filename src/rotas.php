@@ -26,9 +26,16 @@ $rotas->add('admin/usuario', new Route('/admin/usuario',
 $rotas->add('admin/usuario/novo', new Route('/admin/usuario/novo',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'create')));
+
+$rotas->add('admin/usuario/editar', new Route('/admin/usuario/editar/{suffix}',
+        array('_controller' => 'PPI2\Controller\ControllerUsuario',"method" => 'editar', 'suffix' => '')));
+
 $rotas->add('usuario/salvar', new Route('/usuario/salvar',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'salvar')));
+$rotas->add('usuario/atualizar', new Route('/usuario/atualizar',
+        array('_controller' => 'PPI2\Controller\ControllerUsuario',
+            "method" => 'atualizar')));
 $rotas->add('logout', new Route('/logout',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'logout')));

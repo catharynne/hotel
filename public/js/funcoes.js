@@ -96,7 +96,7 @@ $("#btnSalvarUsuario").click(function () {
                     alert(erro.cpf);
                     return;
                 }
-                 if(erro.email){
+                if(erro.email){
                     alert(erro.email);
                     return;
                 }
@@ -109,14 +109,65 @@ $("#btnSalvarUsuario").click(function () {
                     return;
                 }
             }
-                //alert(dados);
-                /*if(dados == "errologin"){
-                    $("#div_retorno").html("Usuário ou senha inválido.");
-                }else if(dados == "admin"){
-                    window.location.href = "/admin";
-                }else{
-                    window.location.href = "/";
-                }*/
+        },
+        beforeSend: function () {
+            $("#processando").css({display: "block"});
+        },
+        complete: function () {
+            $("#processando").css({display: "none"});
+        },
+        error: function () {
+            $("#div_retorno").html("Erro em chamar a função.");
+            setTimeout(function () {
+                $("#div_retorno").css({display: "none"});
+            }, 5000);
+        }
+    });
+});
+$("#btnAtualizarUsuario").click(function () {
+    email = $("#email").val();
+    idUsuario = $("#idUsuario").val();
+    nome = $("#nome").val();
+    telefone = $("#telefone").val();
+    cpf = $("#cpf").val();
+    if(email == "" || nome == "" || telefone == "" || cpf == ""){
+        alert("Todos os campos são de preenchimento obrigatório");
+        return;
+    }
+    $.ajax({
+        type: 'POST',
+        url: '/usuario/atualizar',
+        data: {
+            idUsuario: idUsuario,
+            nome: nome,
+            email: email,
+            telefone: telefone,
+            cpf: cpf
+        },
+        success: function (dados) {
+            erro = JSON.parse(dados);
+            if(erro){
+                if(erro.usuario){
+                    alert("Usuário não encontrado...");
+                    return;
+                }
+                if(erro.cpf){
+                    alert(erro.cpf);
+                    return;
+                }
+                if(erro.email){
+                    alert(erro.email);
+                    return;
+                }
+                if(erro.cadastro == "ok"){
+                    alert("Usuário atualizado com sucesso...");
+                    window.location.href = "/admin/usuario";
+                    return;
+                }else if(erro.cadastro == "erro"){
+                    alert("Algo deu errado no database");
+                    return;
+                }
+            }
             },
             beforeSend: function () {
                 $("#processando").css({display: "block"});

@@ -83,6 +83,50 @@ class UsuarioModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
+    function consultaCpfComExcessaoId($cpf,$id) {
+        try {
+            $sql = 'select * from usuario where cpf = :cpf and id != :id';
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':cpf',$cpf);
+            $p_sql->bindValue(':id',$id);
+            $p_sql->execute();
+            if ($p_sql->rowCount() > 0) {
+                return $p_sql->fetch(PDO::FETCH_ASSOC);
+            }
+            return null;
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
+    function consultaEmailComExcessaoId($email,$id) {
+        try {
+            $sql = 'select * from usuario where email = lower(:email) and id != :id';
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':email',$email);
+            $p_sql->bindValue(':id',$id);
+            $p_sql->execute();
+            if ($p_sql->rowCount() > 0) {
+                return $p_sql->fetch(PDO::FETCH_ASSOC);
+            }
+            return null;
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
+    function consultaId($id) {
+        try {
+            $sql = 'select * from usuario where id = :id';
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':id',$id);
+            $p_sql->execute();
+            if ($p_sql->rowCount() > 0) {
+                return $p_sql->fetch(PDO::FETCH_ASSOC);
+            }
+            return null;
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
     function cadastrar(Usuario $usuario) {
 
         try {
@@ -97,6 +141,25 @@ class UsuarioModelo {
             $p_sql->bindValue(':senha', $usuario->getSenha());
             if ($p_sql->execute())
                 return Conexao::getInstancia()->lastInsertId();
+            return null;
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
+    function atualizar(Usuario $usuario) {
+
+        try {
+            $sql = 'update usuario set nome = upper(:nome), cpf = :cpf, telefone = :telefone, 
+            email = lower(:email), tipousuario = :tipousuario where id = :id';
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':nome', $usuario->getNome());
+            $p_sql->bindValue(':cpf', $usuario->getCpf());
+            $p_sql->bindValue(':telefone', $usuario->getTelefone());
+            $p_sql->bindValue(':email', $usuario->getEmail());
+            $p_sql->bindValue(':tipousuario', $usuario->getTipoUsuario());
+            $p_sql->bindValue(':id', $usuario->getId());
+            if ($p_sql->execute())
+                return $usuario->getId();
             return null;
         } catch (Exception $ex) {
             return 'deu erro na conexão:' . $ex;

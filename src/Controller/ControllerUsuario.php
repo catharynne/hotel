@@ -64,8 +64,8 @@ class ControllerUsuario {
         $email = $this->contexto->get('email');
         $senha = $this->contexto->get('senha');
         $nome = $this->contexto->get('nome');
-        $cpf = $this->contexto->get('cpf');
-        $telefone = $this->contexto->get('telefone');
+        $cpf = preg_replace('/\D/', '', $this->contexto->get('cpf'));
+        $telefone = preg_replace('/\D/', '', $this->contexto->get('telefone'));
         $verificaCpf = new ValidaCPFCNPJ($cpf);
         $verificaCpf = $verificaCpf->valida();
         if(!$verificaCpf){
@@ -102,6 +102,76 @@ class ControllerUsuario {
         echo json_encode($erro);
         return;
     }
+    public function editar($id){
+        $erro = [];
+        if(!is_numeric($id) || $id < 1){
+            $destino = '/admin/usuario';
+            $redirecionar = new RedirectResponse($destino);
+            $redirecionar->send();
+            return;   
+        }
+        $usuarioModelo = new UsuarioModelo();
+        $usuario = $usuarioModelo->consultaId($id);
+        if($usuario != null){
+            return $this->response->setContent($this->twig->render('usuario/edit.php',['usuario' => $usuario]));    
+        }
+        $destino = '/admin/usuario';
+        $redirecionar = new RedirectResponse($destino);
+        $redirecionar->send();
+        return;
+    }
+    public function atualizar(){
+        $erro = [];
+        $id = $this->contexto->get('idUsuario');
+        $email = $this->contexto->get('email');
+        $nome = $this->contexto->get('nome');
+        $cpf = preg_replace('/\D/', '', $this->contexto->get('cpf'));
+        $telefone = preg_replace('/\D/', '', $this->contexto->get('telefone'));
+        $verificaCpf = new ValidaCPFCNPJ($cpf);
+        $verificaCpf = $verificaCpf->valida();
+        if(!$verificaCpf){
+            $erro['cpf'] = "cpf inválido!";
+            echo json_encode($erro);
+            return;
+        }
+        $usuarioModelo = new UsuarioModelo();
+        $usuario = $usuarioModelo->consultaId($id);
+        if($usuario == null){
+            $erro['usuario'] = "Usuário não encontrado.";
+            echo json_encode($erro);
+            return;
+        }
+        $usuario = null;
+        $usuario = $usuarioModelo->consultaCpfComExcessaoId($cpf,$id);
+        if($usuario != null){
+            $erro['cpf'] ="Cpf já está cadastrado!";
+            echo json_encode($erro);
+            return;
+        }
+        $usuario = null;
+        $usuario = $usuarioModelo->consultaEmailComExcessaoId($email,$id);
+        if($usuario != null){
+            $erro['email'] ="Email já está cadastrado!";
+            echo json_encode($erro);
+            return;
+        }
+        $usuarioEntidade = new Usuario();
+        $usuarioEntidade->setId($id);
+        $usuarioEntidade->setNome($nome);
+        $usuarioEntidade->setTelefone($telefone);
+        $usuarioEntidade->setCpf($cpf);
+        $usuarioEntidade->setEmail($email);
+        $usuarioEntidade->setTipoUsuario(2);
+        if($usuarioModelo->atualizar($usuarioEntidade) > 0){
+            $erro['cadastro'] = "ok";
+            echo json_encode($erro);
+            return;
+        }
+        $erro['cadastro'] = "erro";
+        echo json_encode($erro);
+        return;
+    }
+
     public function validaLogin(){
         //validação via AJAX com method = POST da página welcome.php
         $email = $this->contexto->get('email');
