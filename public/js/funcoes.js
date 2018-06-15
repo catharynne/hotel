@@ -1,4 +1,19 @@
 $(document).ready(function () {
+    $('#data').datepicker({
+      autoclose: true,
+      format: 'dd/mm/yyyy',
+      language: 'pt-BR',
+      weekStart: 0,
+      startDate:'0d',
+      todayHighlight: true
+  });
+    $('#data').datepicker('setDate', new Date());
+    $('#hora').timepicker({
+        showInputs: false,
+        showMeridian: false,
+        defaultTime: 'current',
+        minuteStep: 30
+  })
     $("#butao1").click(function () {
         $.ajax({
             type: 'GET',
@@ -302,22 +317,18 @@ $("#btnSalvarAgenda").click(function () {
         success: function (dados) {
             erro = JSON.parse(dados);
             if(erro){
-                /*if(erro.cpf){
-                    alert(erro.cpf);
-                    return;
-                }
-                if(erro.email){
-                    alert(erro.email);
+                if(erro.agenda){
+                    alert(erro.agenda);
                     return;
                 }
                 if(erro.cadastro == "ok"){
                     alert("Usuário cadastrada com sucesso...");
-                    window.location.href = "/admin/usuario";
+                    window.location.href = "/admin/agenda";
                     return;
                 }else if(erro.cadastro == "erro"){
                     alert("Algo deu errado no database");
                     return;
-                }*/
+                }
             }
         },
         beforeSend: function () {

@@ -40,9 +40,11 @@
 			<label class="control-label">Assunto</label>
 			<textarea style="min-height: 80px;resize: vertical;" class="form-control" placeholder="" name="assunto" rows="5" id="assunto" required></textarea>
 			<label class="control-label">Data</label>
-			<input type="text" class="form-control" id="data" name="data" required>
+			<input type="text" class="form-control" id="data" name="data" required readonly="true">
 			<label class="control-label">Hora</label>
-			<input type="text" class="form-control" id="hora" name="hora" required>
+			<div class="bootstrap-timepicker">
+			<input type="text" class="form-control timepicker" id="hora" name="hora" required readonly="true">
+			</div>
 		</div>
 		<div class="text-center">
 			<button class="btn btn-success" id="btnSalvarAgenda">Salvar</button>

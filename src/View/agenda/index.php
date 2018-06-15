@@ -24,7 +24,6 @@
 					<th class="text-center">Ações</th>
 				</tr>
 			</thead>
-			<!-- str_limit($orcamento->title, $limit = 50, $end = '...') -->
 			<tbody id="conteudo">
 				{% for agenda in agendas %}
 				<tr>
@@ -53,7 +52,7 @@
 		<div id="processando" style="display: none;">
 			<img src="/img/ajax-loader.gif" />
 			</div>
-		<span id ="detalhes" class="">Total de: {{agenda|length}} registro(s).</span>
+		<span id ="detalhes" class="">Total de: {{agendas|length}} registro(s).</span>
 	</div>
 
 
