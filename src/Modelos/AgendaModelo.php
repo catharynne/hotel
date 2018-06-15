@@ -78,6 +78,7 @@ class AgendaModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
+    
     function consultaDataHora($d,$h) {
         try {
             $sql = 'select * from agenda where data = :d and hora = :h';
@@ -93,25 +94,12 @@ class AgendaModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
-    function consultaEmail($email) {
+    function consultaDataHoraComExcessaoId($d,$h,$id) {
         try {
-            $sql = 'select * from usuario where email = lower(:email)';
+            $sql = 'select * from agenda where data = :d and hora = :h and id != :id';
             $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':email',$email);
-            $p_sql->execute();
-            if ($p_sql->rowCount() > 0) {
-                return $p_sql->fetch(PDO::FETCH_ASSOC);
-            }
-            return null;
-        } catch (Exception $ex) {
-            return 'deu erro na conexão:' . $ex;
-        }
-    }
-    function consultaCpfComExcessaoId($cpf,$id) {
-        try {
-            $sql = 'select * from usuario where cpf = :cpf and id != :id';
-            $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':cpf',$cpf);
+            $p_sql->bindValue(':d',$d);
+            $p_sql->bindValue(':h',$h);
             $p_sql->bindValue(':id',$id);
             $p_sql->execute();
             if ($p_sql->rowCount() > 0) {
@@ -122,24 +110,11 @@ class AgendaModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
-    function consultaEmailComExcessaoId($email,$id) {
-        try {
-            $sql = 'select * from usuario where email = lower(:email) and id != :id';
-            $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':email',$email);
-            $p_sql->bindValue(':id',$id);
-            $p_sql->execute();
-            if ($p_sql->rowCount() > 0) {
-                return $p_sql->fetch(PDO::FETCH_ASSOC);
-            }
-            return null;
-        } catch (Exception $ex) {
-            return 'deu erro na conexão:' . $ex;
-        }
-    }
+    
     function consultaId($id) {
         try {
-            $sql = 'select * from usuario where id = :id';
+            $sql = "select a.*,u.nome,c.descricao from agenda as a,usuario as u, categoria as c 
+            where a.cliente = u.id and a.categoria = c.id and a.id = :id";
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->bindValue(':id',$id);
             $p_sql->execute();
@@ -172,20 +147,24 @@ class AgendaModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
-    function atualizar(Usuario $usuario) {
+    function atualizar(Agenda $agenda) {
 
         try {
-            $sql = 'update usuario set nome = upper(:nome), cpf = :cpf, telefone = :telefone, 
-            email = lower(:email), tipousuario = :tipousuario where id = :id';
+            $sql = 'update agenda set titulo = upper(:titulo), assunto = :assunto, data = :data, 
+            hora = :hora, cliente = :cliente, categoria = :categoria, admin = :admin, 
+            status = :status where id = :id';
             $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':nome', $usuario->getNome());
-            $p_sql->bindValue(':cpf', $usuario->getCpf());
-            $p_sql->bindValue(':telefone', $usuario->getTelefone());
-            $p_sql->bindValue(':email', $usuario->getEmail());
-            $p_sql->bindValue(':tipousuario', $usuario->getTipoUsuario());
-            $p_sql->bindValue(':id', $usuario->getId());
+            $p_sql->bindValue(':id', $agenda->getId());
+            $p_sql->bindValue(':titulo', $agenda->getTitulo());
+            $p_sql->bindValue(':assunto', $agenda->getAssunto());
+            $p_sql->bindValue(':data', $agenda->getData());
+            $p_sql->bindValue(':hora', $agenda->getHora());
+            $p_sql->bindValue(':cliente', $agenda->getCliente());
+            $p_sql->bindValue(':categoria', $agenda->getCategoria());
+            $p_sql->bindValue(':admin', $agenda->getAdmin());
+            $p_sql->bindValue(':status', $agenda->getStatus());
             if ($p_sql->execute())
-                return $usuario->getId();
+                return $agenda->getId();
             return null;
         } catch (Exception $ex) {
             return 'deu erro na conexão:' . $ex;

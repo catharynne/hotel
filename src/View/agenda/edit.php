@@ -1,7 +1,7 @@
 {% extends "master.twig" %}
 {% block conteudo %}
 <div class="col-md-12">
-	<h1 class="text-center text-success">Nova agenda</h1>
+	<h1 class="text-center text-success">Editar agenda</h1>
 	<div class="col-md-6 col-md-offset-3 form-horizontal">
 		<div class="form-group">
 			<div class="form-group">
@@ -11,12 +11,17 @@
 					</div>
 				</div>
 			</div>
+			<input type="hidden" value="{{agenda['id']}}" name="idAgenda" id="idAgenda">
 			<label class="control-label">Cliente</label>
 			<select id="cliente" name="cliente" class="input-group btn btn-success btn-block">
-				{% if clientes is not empty %}
+				{% if agenda is not empty %}
 				<option selected="" value="-1">Selecione um cliente</option>
 				{% for cliente in clientes %}
+				{% if cliente['id'] == agenda['cliente'] %}
+				<option selected="" value="{{cliente['id']}}">{{cliente['nome']}} - CPF: {{cliente['cpf']}}</option>
+				{% else %}
 				<option value="{{cliente['id']}}">{{cliente['nome']}} - CPF: {{cliente['cpf']}}</option>
+				{% endif %}
 				{% endfor %}
 				{% else %}
 				<option selected="" value="0">Nenhum cliente cadastrado</option>
@@ -28,7 +33,11 @@
 				{% if categorias is not empty %}
 				<option selected="" value="-1">Selecione uma categoria</option>
 				{% for categoria in categorias %}
+				{% if categoria['id'] == agenda['categoria'] %}
+				<option selected="" value="{{categoria['id']}}">{{categoria['descricao']}}</option>
+				{% else %}
 				<option value="{{categoria['id']}}">{{categoria['descricao']}}</option>
+				{% endif %}
 				{% endfor %}
 				{% else %}
 				<option selected="" value="0">Nenhum categoria cadastrada</option>
@@ -36,18 +45,28 @@
 
 			</select>
 			<label class="control-label">Título</label>
-			<input type="text" class="form-control" id="titulo" name="titulo" required>
+			<input type="text" class="form-control" id="titulo" value="{{agenda['titulo']}}" name="titulo" required>
 			<label class="control-label">Assunto</label>
-			<textarea style="min-height: 80px;resize: vertical;" class="form-control" placeholder="" name="assunto" rows="5" id="assunto" required></textarea>
+			<textarea style="min-height: 80px;resize: vertical;" class="form-control" placeholder="" name="assunto" rows="5" id="assunto" required>{{agenda['assunto']}}</textarea>
 			<label class="control-label">Data</label>
-			<input type="text" class="form-control makedata" id="data" name="data" required readonly="true">
+			<input type="text" class="form-control" id="data" name="data" value="{{agenda['data']|date("d/m/Y")}}" required readonly="true">
 			<label class="control-label">Hora</label>
 			<div class="bootstrap-timepicker">
-			<input type="text" class="form-control timepicker" id="hora" name="hora" required readonly="true">
+				<input type="text" class="form-control timepicker" value="{{agenda['hora']}}" id="hora" name="hora" required readonly="true">
 			</div>
+			<label class="control-label">Status</label>
+			<select id="status" name="status" class="input-group btn btn-default btn-block">
+				{% if agenda['status'] == 1 %}
+				<option selected="" value="1">Ativo</option>
+				<option value="0">Inativo</option>
+				{% else %}
+				<option value="1">Ativo</option>
+				<option selected="" value="0">Inativo</option>
+				{% endif %}
+			</select>
 		</div>
 		<div class="text-center">
-			<button class="btn btn-success" id="btnSalvarAgenda">Salvar</button>
+			<button class="btn btn-success" id="btnAtualizarAgenda">Salvar</button>
 			<a href="/admin/agenda" class="btn btn-danger">Cancelar</a>
 			<div id="processando" style="display: none;">
 				<img src="/img/ajax-loader.gif" />

@@ -26,7 +26,11 @@
 			</thead>
 			<tbody id="conteudo">
 				{% for agenda in agendas %}
+				{% if agenda['status'] == 0 %}
+				<tr class="alert-danger">
+				{% else %}
 				<tr>
+				{% endif %}
 					<td>{{agenda['id']}}</td>
 					<td>{{agenda['data']|date("d/m/Y") }}</td>
 					<td>{{agenda['hora']}}</td>

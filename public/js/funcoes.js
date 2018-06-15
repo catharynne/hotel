@@ -7,7 +7,7 @@ $(document).ready(function () {
       startDate:'0d',
       todayHighlight: true
   });
-    $('#data').datepicker('setDate', new Date());
+    $('.makedata').datepicker('setDate', new Date());
     $('#hora').timepicker({
         showInputs: false,
         showMeridian: false,
@@ -322,7 +322,7 @@ $("#btnSalvarAgenda").click(function () {
                     return;
                 }
                 if(erro.cadastro == "ok"){
-                    alert("Usuário cadastrada com sucesso...");
+                    alert("Agenda cadastrada com sucesso...");
                     window.location.href = "/admin/agenda";
                     return;
                 }else if(erro.cadastro == "erro"){
@@ -345,6 +345,64 @@ $("#btnSalvarAgenda").click(function () {
         }
     });
 });
+$("#btnAtualizarAgenda").click(function () {
+    titulo = $("#titulo").val();
+    assunto = $("#assunto").val();
+    data = $("#data").val();
+    hora = $("#hora").val();
+    categoria = $("#categoria").val();
+    cliente = $("#cliente").val();
+    status = $("#status").val();
+    idAgenda = $("#idAgenda").val();
+    if(titulo == "" || assunto == "" || data == "" || hora == "" || cliente <= 0 || categoria <= 0){
+        alert("Todos os campos são de preenchimento obrigatório");
+        return;
+    }
+    $.ajax({
+        type: 'POST',
+        url: '/agenda/atualizar',
+        data: {
+            idAgenda: idAgenda,
+            status: status,
+            titulo: titulo,
+            assunto: assunto,
+            data: data,
+            hora: hora,
+            cliente: cliente,
+            categoria: categoria
+        },
+        success: function (dados) {
+            erro = JSON.parse(dados);
+            if(erro){
+                if(erro.agenda){
+                    alert(erro.agenda);
+                    return;
+                }
+                if(erro.cadastro == "ok"){
+                    alert("Agenda atualizada com sucesso...");
+                    window.location.href = "/admin/agenda";
+                    return;
+                }else if(erro.cadastro == "erro"){
+                    alert("Algo deu errado no database");
+                    return;
+                }
+            }
+        },
+        beforeSend: function () {
+            $("#processando").css({display: "block"});
+        },
+        complete: function () {
+            $("#processando").css({display: "none"});
+        },
+        error: function () {
+            $("#div_retorno").html("Erro em chamar a função.");
+            setTimeout(function () {
+                $("#div_retorno").css({display: "none"});
+            }, 5000);
+        }
+    });
+});
+
 function refreshTable() {
     var value = "";
     $.ajax({

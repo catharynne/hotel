@@ -65,10 +65,10 @@ $rotas->add('admin/agenda/novo', new Route('/admin/agenda/novo',
 $rotas->add('admin/agenda/editar', new Route('/admin/agenda/editar/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerAgenda',"method" => 'editar', 'suffix' => '')));
 
-$rotas->add('categoria/salvar', new Route('/agenda/salvar',
+$rotas->add('agenda/salvar', new Route('/agenda/salvar',
         array('_controller' => 'PPI2\Controller\ControllerAgenda',
             "method" => 'salvar')));
-$rotas->add('categoria/atualizar', new Route('/agenda/atualizar',
+$rotas->add('agenda/atualizar', new Route('/agenda/atualizar',
         array('_controller' => 'PPI2\Controller\ControllerAgenda',
             "method" => 'atualizar')));
 //-------FIM ROTAS AGENDA

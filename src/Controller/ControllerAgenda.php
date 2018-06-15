@@ -105,67 +105,62 @@ class ControllerAgenda {
     public function editar($id){
         $erro = [];
         if(!is_numeric($id) || $id < 1){
-            $destino = '/admin/usuario';
+            $destino = '/admin/agenda';
             $redirecionar = new RedirectResponse($destino);
             $redirecionar->send();
             return;   
         }
-        $tipoUsuarioModelo = new TipoAgendaModelo();
-        $tipoUsuario = $tipoUsuarioModelo->listar();
-        $usuarioModelo = new AgendaModelo();
-        $usuario = $usuarioModelo->consultaId($id);
-        if($usuario != null){
-            return $this->response->setContent($this->twig->render('agenda/edit.php',['usuario' => $usuario,'permissoes' => $tipoUsuario]));    
+        $clientesModelo = new UsuarioModelo();
+        $clientes = $clientesModelo->listarUsuarios();
+        $categoriaModelo = new CategoriaModelo();
+        $categorias = $categoriaModelo->listar();
+        $agendaModelo = new AgendaModelo();
+        $agenda = $agendaModelo->consultaId($id);
+        if($agenda != null){
+            return $this->response->setContent($this->twig->render('agenda/edit.php',['agenda' => $agenda,'categorias' => $categorias,'clientes' => $clientes]));    
         }
-        $destino = '/admin/usuario';
+        $destino = '/admin/agenda';
         $redirecionar = new RedirectResponse($destino);
         $redirecionar->send();
         return;
     }
     public function atualizar(){
         $erro = [];
-        $id = $this->contexto->get('idUsuario');
-        $email = $this->contexto->get('email');
-        $nome = $this->contexto->get('nome');
-        $tipo_usuario = $this->contexto->get('tipousuario');
-        $cpf = preg_replace('/\D/', '', $this->contexto->get('cpf'));
-        $telefone = preg_replace('/\D/', '', $this->contexto->get('telefone'));
-        $verificaCpf = new ValidaCPFCNPJ($cpf);
-        $verificaCpf = $verificaCpf->valida();
-        if(!$verificaCpf){
-            $erro['cpf'] = "cpf inválido!";
+        $id = $this->contexto->get('idAgenda');
+        $titulo = $this->contexto->get('titulo');
+        $assunto = $this->contexto->get('assunto');
+        $data = $this->contexto->get('data');
+        $hora = $this->contexto->get('hora').':00';
+        $categoria = $this->contexto->get('categoria');
+        $status = $this->contexto->get('status');
+        $cliente = $this->contexto->get('cliente');
+        if (isset($data)) {
+            $date = $data;
+            $date = explode('/', $date);
+            $dia = $date[0];
+            $mes = $date[1];
+            $ano = $date[2];
+            $data = $ano . '-' . $mes . '-' . $dia;
+        }
+        $agendaModelo = new AgendaModelo();
+        $agenda = $agendaModelo->consultaDataHoraComExcessaoId($data,$hora,$id);
+        if($agenda != null){
+            $erro['agenda'] ="Duplicidade de dia e hora!";
             echo json_encode($erro);
             return;
         }
-        $usuarioModelo = new AgendaModelo();
-        $usuario = $usuarioModelo->consultaId($id);
-        if($usuario == null){
-            $erro['usuario'] = "Usuário não encontrado.";
-            echo json_encode($erro);
-            return;
-        }
-        $usuario = null;
-        $usuario = $usuarioModelo->consultaCpfComExcessaoId($cpf,$id);
-        if($usuario != null){
-            $erro['cpf'] ="Cpf já está cadastrado!";
-            echo json_encode($erro);
-            return;
-        }
-        $usuario = null;
-        $usuario = $usuarioModelo->consultaEmailComExcessaoId($email,$id);
-        if($usuario != null){
-            $erro['email'] ="Email já está cadastrado!";
-            echo json_encode($erro);
-            return;
-        }
-        $usuarioEntidade = new Usuario();
-        $usuarioEntidade->setId($id);
-        $usuarioEntidade->setNome(trim($nome));
-        $usuarioEntidade->setTelefone(trim($telefone));
-        $usuarioEntidade->setCpf(trim($cpf));
-        $usuarioEntidade->setEmail(trim($email));
-        $usuarioEntidade->setTipoUsuario($tipo_usuario);
-        if($usuarioModelo->atualizar($usuarioEntidade) > 0){
+        $agendaEntidade = new Agenda();
+        $agendaEntidade->setId($id);
+        $agendaEntidade->setStatus($status);
+        $agendaEntidade->setTitulo(trim($titulo));
+        $agendaEntidade->setAssunto(trim($assunto));
+        $agendaEntidade->setData(trim($data));
+        $agendaEntidade->setHora(trim($hora));
+        $agendaEntidade->setCliente($cliente);
+        $agendaEntidade->setCategoria($categoria);
+        $agendaEntidade->setStatus($status);
+        $agendaEntidade->setAdmin($this->sessao->get('usuario')['tipousuario']);
+        if($agendaModelo->atualizar($agendaEntidade) > 0){
             $erro['cadastro'] = "ok";
             echo json_encode($erro);
             return;
