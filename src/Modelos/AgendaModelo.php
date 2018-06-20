@@ -24,18 +24,72 @@ class AgendaModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
-    function procurarAgendas($key) {
+    function procurarAgenda($key,$categ,$dataini,$datafim) {
         try {
-            $lista = [];
-            if($key == ""){
-                $sql = 'select * from agenda order by data,hora asc';
-            }else{
-                $sql = "select * from usuario where nome LIKE :pal or cpf LIKE :pal or telefone LIKE :pal or email LIKE :pal order by nome";
+            if ($dataini != "") {
+                $date = $dataini;
+                $date = explode('/', $date);
+                $dia = $date[0];
+                $mes = $date[1];
+                $ano = $date[2];
+                $dataini = $ano . '-' . $mes . '-' . $dia;
             }
+            if ($datafim != "") {
+                $date = $datafim;
+                $date = explode('/', $date);
+                $dia = $date[0];
+                $mes = $date[1];
+                $ano = $date[2];
+                $datafim = $ano . '-' . $mes . '-' . $dia;
+            }
+            $where = "";
+            if(trim($key) != "" || $categ > 0 || $dataini != "" || $datafim != ""){
+                $where = " where";
+            }
+            if(trim($key) != ""){
+                $where .= " usuario.nome  LIKE :pal or a.assunto  LIKE :pal or a.titulo LIKE :pal ";
+            }
+            if($categ > 0){
+                if(trim($key) != ""){
+                    $where .= " and";
+                }
+                $where .= " a.categoria = :categoria";
+            }
+            if($dataini != ""){
+                if(trim($key) != "" || $categ > 0){
+                    $where .= " and";
+                }
+                $where .= " a.data >= :datainicial";
+            }
+            if($datafim != ""){
+                if(trim($key) != "" || $categ > 0 || $dataini != ""){
+                    $where .= " and";
+                }
+                $where .= " a.data <= :datafinal";
+            }
+            $sql = "select a.id, a.titulo, a.assunto, a.data, a.hora, a.admin,a.status,a.cliente,
+            a.categoria,usuario.nome, categoria.descricao as categdesc from agenda as a 
+            inner join usuario on usuario.id = a.cliente inner join categoria on categoria.id = 
+            a.categoria".$where." order by a.data, a.hora";
+            /*$sql = "select a.*,u.nome,c.descricao from agenda as a,usuario as u, categoria as c 
+            where a.cliente = u.id and a.categoria = c.id".$where." order by a.data, a.hora";*/
+            $lista = [];
             $p_sql = Conexao::getInstancia()->prepare($sql);
-            if($key != ""){
+            if(trim($key) != ""){
                 $p_sql->bindValue(':pal',"%".$key."%");
             }
+            if($categ > 0){
+                $p_sql->bindValue(':categoria',$categ);
+            }
+            if($dataini != ""){
+                $p_sql->bindValue(':datainicial',$dataini);
+            }
+            if($datafim != ""){
+                $p_sql->bindValue(':datafinal',$datafim);
+            }
+            /*print_r($sql);
+            return;
+            die();*/
             $p_sql->execute();
             $rows = $p_sql->fetchAll(PDO::FETCH_OBJ);
             foreach ($rows as $key => $row) {

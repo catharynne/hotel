@@ -13,7 +13,7 @@ $(document).ready(function () {
         showMeridian: false,
         defaultTime: 'current',
         minuteStep: 30
-  })
+    })
     $("#butao1").click(function () {
         $.ajax({
             type: 'GET',
@@ -564,6 +564,114 @@ function fillTableCateg(row) {
             $("#detalhescateg").html("Nenhum registor encontrado.");
         }
     }
+}
+$("#pesquisaAgenda").on('keyup', function (e) {
+
+    if (e.keyCode === 13 ){
+    
+        $("#btnPesquisaAgenda").click();
+    } 
+
+});
+$("#btnPesquisaAgenda, #btnIconPesquisaAgenda").click(function () {
+    palavra = $("#pesquisaAgenda").val();
+    categ = $("#categoria").val();
+    dataini = $("#datainicial").val();
+    datafim = $("#datafinal").val();
+    $.ajax({
+        type: 'GET',
+        url: '/admin/agenda',
+        data: {
+            buscaagenda: palavra,
+            categoria: categ,
+            datainicial: dataini,
+            datafinal: datafim
+        },
+        success: function (dados) {
+            try {
+                var agendas = JSON.parse(dados);
+                if (agendas[0]) {
+                    fillTableAgenda(agendas);
+                }else{
+                    $("#conteudo").html("");
+                    $("#detalhes").html("Nenhum registor encontrado.");
+                }
+            } catch (err) {
+                alert("Nenhum registro encontrado com o texto " + palavra);
+                $("#pesquisa").val("");
+                $("#conteudo").html("");
+            }
+        },
+        beforeSend: function () {
+            $("#processando").css({display: "block"});
+        },
+        complete: function () {
+            $("#processando").css({display: "none"});
+        },
+        error: function () {
+            $("#div_retorno").html("Erro em chamar a função.");
+            setTimeout(function () {
+                $("#div_retorno").css({display: "none"});
+            }, 5000);
+        }
+    });
+});
+function fillTableAgenda(row) {
+    $("#conteudo").html("");
+    for (var i in row) {
+        $("#conteudo").append("<tr><td>" + row[i].id +"</td>"+
+            "<td>" + row[i].data + "</td><td>" + row[i].hora + "</td><td>" + row[i].titulo + "</td>" +
+            "<td>" + row[i].assunto + "</td>"+
+            "<td>" + row[i].nome + "</td>"+
+            "<td>" + row[i].categdesc + "</td>"+
+            "<td><a class='btn btn-warning glyphicon glyphicon-pencil btn-xs' href='/admin/agenda/editar/" + row[i].id + "'></td>" +
+            "</tr>");
+        if (row.length > 0) {
+            $("#detalhes").html("Total de: " + row.length + " registro(s).");
+        } else {
+            $("#detalhes").html("Nenhum registor encontrado.");
+        }
+    }
+}
+function searchAgenda(value){
+    if (value.length < 1) {
+        return;
+    }
+    //var str = "'%" + value + "%'";
+    $.ajax({
+        type: 'GET',
+        url: '/admin/usuario',
+        data: {
+            busca: value
+        },
+        success: function (dados) {
+            try {
+                var usuarios = JSON.parse(dados);
+                if (usuarios[0]) {
+                    fillTable(usuarios);
+                }else{
+                    $("#conteudo").html("");
+                    $("#detalhes").html("Nenhum registor encontrado.");
+                }
+            } catch (err) {
+                alert("Nenhum registro encontrado com o texto " + texto);
+                $("#pesquisa").val("");
+                $("#conteudo").html("");
+            }
+        },
+        beforeSend: function () {
+            $("#processando").css({display: "block"});
+        },
+        complete: function () {
+            $("#processando").css({display: "none"});
+        },
+        error: function () {
+            $("#div_retorno").html("Erro em chamar a função.");
+            setTimeout(function () {
+                $("#div_retorno").css({display: "none"});
+            }, 5000);
+        }
+    });
 }
 $(document).ready(function () {
     $("#formCadastro").submit(function (e) {

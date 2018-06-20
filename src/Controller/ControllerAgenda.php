@@ -28,16 +28,21 @@ class ControllerAgenda {
 
     public function index() {
         $busca = $this->contexto->get('buscaagenda');
+        $categ = $this->contexto->get('categoria');
+        $dataini = $this->contexto->get('datainicial');
+        $datafim = $this->contexto->get('datafinal');
         if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
             $agendas = new AgendaModelo();
-            if(isset($busca)){
-                $agendas = $agendas->procurarAgenda($busca);
+            $categorias = new CategoriaModelo();
+            if(isset($busca) || isset($categ) || isset($dataini) || isset($datafim)){
+                $agendas = $agendas->procurarAgenda($busca,$categ,$dataini,$datafim);
                 echo json_encode($agendas);
                 return;
             }else{
+                $categorias = $categorias->listar();
                 $agendas = $agendas->listar();    
             }
-            return $this->response->setContent($this->twig->render('agenda/index.php',['agendas' => $agendas]));
+            return $this->response->setContent($this->twig->render('agenda/index.php',['agendas' => $agendas,'categorias' => $categorias]));
         }
         else{
             $destino = '/';

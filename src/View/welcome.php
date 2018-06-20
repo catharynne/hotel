@@ -1,13 +1,11 @@
 {% extends "master.twig" %}
 
-
-
 {% block conteudo %}
 {{ parent() }}
 
 <div class="row">
 	<div class="col-md-8">
-		<h1>RAUL </h1>
+		<h1>RAUL - PROJETO DE PPI2 </h1>
 
 	</div>
 	{% if usuario is empty %}
