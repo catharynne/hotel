@@ -568,7 +568,6 @@ function fillTableCateg(row) {
 $("#pesquisaAgenda").on('keyup', function (e) {
 
     if (e.keyCode === 13 ){
-    
         $("#btnPesquisaAgenda").click();
     } 
 
@@ -616,11 +615,32 @@ $("#btnPesquisaAgenda, #btnIconPesquisaAgenda").click(function () {
         }
     });
 });
+function convertDate(inputFormat) {
+  function pad(s) { return (s < 10) ? '0' + s : s; }
+  var d = new Date(inputFormat);
+  return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
+}
+function formataData(datax){
+    var data = new Date(datax);
+    var dia = data.getDate()+1;
+    if (dia.toString().length == 1)
+      dia = "0"+dia;
+    var mes = data.getMonth()+1;
+    if (mes.toString().length == 1)
+      mes = "0"+mes;
+    var ano = data.getFullYear();  
+    return dia+"/"+mes+"/"+ano;
+}
 function fillTableAgenda(row) {
     $("#conteudo").html("");
+    primeirotd = "";
     for (var i in row) {
-        $("#conteudo").append("<tr><td>" + row[i].id +"</td>"+
-            "<td>" + row[i].data + "</td><td>" + row[i].hora + "</td><td>" + row[i].titulo + "</td>" +
+        primeirotd = "<tr><td>";
+        if(row[i].status == 0){
+            primeirotd = "<tr class='alert-danger'><td>";
+        }
+        $("#conteudo").append(primeirotd + row[i].id +"</td>"+
+            "<td>" + formataData(row[i].data) + "</td><td>" + row[i].hora + "</td><td>" + row[i].titulo + "</td>" +
             "<td>" + row[i].assunto + "</td>"+
             "<td>" + row[i].nome + "</td>"+
             "<td>" + row[i].categdesc + "</td>"+
@@ -631,6 +651,7 @@ function fillTableAgenda(row) {
         } else {
             $("#detalhes").html("Nenhum registor encontrado.");
         }
+        primeirotd = "<tr><td>"
     }
 }
 function searchAgenda(value){
