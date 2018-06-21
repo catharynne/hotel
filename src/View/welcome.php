@@ -11,8 +11,8 @@
 	{% if usuario is empty %}
 	<div class="col-md-4">
 		<div class="form-group">
-			<label for="email">Email</label>
-			<input class="form-control" id="email" name="email" type="email" placeholder="Endereço de email">
+			<label for="email">Email ou CPF(somente números)</label>
+			<input class="form-control" id="email" name="email" type="email" placeholder="Endereço de email cpf somente números">
 		</div>
 		<div class="form-group">
 			<label for="senha">Senha</label>

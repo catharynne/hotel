@@ -31,7 +31,7 @@ class ControllerAgenda {
         $categ = $this->contexto->get('categoria');
         $dataini = $this->contexto->get('datainicial');
         $datafim = $this->contexto->get('datafinal');
-        if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
+        if ($this->sessao->existe('usuario')&& $this->sessao->get('usuario')['tipo'] == 'Administrador'){
             $agendas = new AgendaModelo();
             $categorias = new CategoriaModelo();
             if(isset($busca) || isset($categ) || isset($dataini) || isset($datafim)){
@@ -67,6 +67,13 @@ class ControllerAgenda {
         }
     }
     public function salvar(){
+        if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
+        }else{
+            $re = '/';
+            $redirecionar = new RedirectResponse($re);
+            $redirecionar->send();
+            return; 
+        }
         $erro = [];
         $titulo = $this->contexto->get('titulo');
         $assunto = $this->contexto->get('assunto');
@@ -196,12 +203,28 @@ class ControllerAgenda {
         }
 
     }
-    public function logout(){
-        //remove a chave['ppi2'] e inválida a sessão.
-        $this->sessao->del();
-        //redireciona para raiz '/'.
-        $re = new RedirectResponse('/');
-        $re->send();
+    
+    public function show($id){
+        if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
+        }else{
+            $re = '/';
+            $redirecionar = new RedirectResponse($re);
+            $redirecionar->send();
+            return; 
+        }
+        if(!is_numeric($id) || $id < 1){
+            $destino = '/admin/agenda';
+            $redirecionar = new RedirectResponse($destino);
+            $redirecionar->send();
+            return;   
+        }
+        
+        $agendas = new AgendaModelo();
+        $agenda = $agendas->getAgendaAdmin($id)[0];
+        if($agenda != null){
+            return $this->response->setContent($this->twig->render('agenda/show.php',['agenda' => $agenda]));
+        }
+        
     }
 
 }

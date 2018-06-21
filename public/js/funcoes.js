@@ -56,6 +56,8 @@ $(document).ready(function () {
                     $("#div_retorno").html("Usuário ou senha inválido.");
                 }else if(dados == "admin"){
                     window.location.href = "/admin";
+                }else if(dados == "cliente"){
+                    window.location.href = "/agenda";
                 }else{
                     window.location.href = "/";
                 }
@@ -572,11 +574,22 @@ $("#pesquisaAgenda").on('keyup', function (e) {
     } 
 
 });
+
 $("#btnPesquisaAgenda, #btnIconPesquisaAgenda").click(function () {
     palavra = $("#pesquisaAgenda").val();
     categ = $("#categoria").val();
     dataini = $("#datainicial").val();
     datafim = $("#datafinal").val();
+    if(dataini != "" && datafim !=""){
+        data = dataini.toString().split("/");
+        d1 = new Date(data[2]+"-"+data[1]+"-"+data[0]);
+        data = datafim.toString().split("/");
+        d2 = new Date(data[2]+"-"+data[1]+"-"+data[0]);
+        if(d2.getTime() < d1.getTime()){
+            alert("Data final não pode ser menor que data inicial...");
+            return;
+        }
+    }
     $.ajax({
         type: 'GET',
         url: '/admin/agenda',
@@ -615,67 +628,49 @@ $("#btnPesquisaAgenda, #btnIconPesquisaAgenda").click(function () {
         }
     });
 });
-function convertDate(inputFormat) {
-  function pad(s) { return (s < 10) ? '0' + s : s; }
-  var d = new Date(inputFormat);
-  return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
-}
-function formataData(datax){
-    var data = new Date(datax);
-    var dia = data.getDate()+1;
-    if (dia.toString().length == 1)
-      dia = "0"+dia;
-    var mes = data.getMonth()+1;
-    if (mes.toString().length == 1)
-      mes = "0"+mes;
-    var ano = data.getFullYear();  
-    return dia+"/"+mes+"/"+ano;
-}
-function fillTableAgenda(row) {
-    $("#conteudo").html("");
-    primeirotd = "";
-    for (var i in row) {
-        primeirotd = "<tr><td>";
-        if(row[i].status == 0){
-            primeirotd = "<tr class='alert-danger'><td>";
+$("#pesquisaAgenda").on('keyup', function (e) {
+
+    if (e.keyCode === 13 ){
+        $("#btnPesquisaAgendaUsuario").click();
+    } 
+
+});
+
+$("#btnPesquisaAgendaUsuario, #btnIconPesquisaAgendaUsuario").click(function () {
+    palavra = $("#pesquisaAgenda").val();
+    categ = $("#categoria").val();
+    dataini = $("#datainicial").val();
+    datafim = $("#datafinal").val();
+    if(dataini != "" && datafim !=""){
+        data = dataini.toString().split("/");
+        d1 = new Date(data[2]+"-"+data[1]+"-"+data[0]);
+        data = datafim.toString().split("/");
+        d2 = new Date(data[2]+"-"+data[1]+"-"+data[0]);
+        if(d2.getTime() < d1.getTime()){
+            alert("Data final não pode ser menor que data inicial...");
+            return;
         }
-        $("#conteudo").append(primeirotd + row[i].id +"</td>"+
-            "<td>" + formataData(row[i].data) + "</td><td>" + row[i].hora + "</td><td>" + row[i].titulo + "</td>" +
-            "<td>" + row[i].assunto + "</td>"+
-            "<td>" + row[i].nome + "</td>"+
-            "<td>" + row[i].categdesc + "</td>"+
-            "<td><a class='btn btn-warning glyphicon glyphicon-pencil btn-xs' href='/admin/agenda/editar/" + row[i].id + "'></td>" +
-            "</tr>");
-        if (row.length > 0) {
-            $("#detalhes").html("Total de: " + row.length + " registro(s).");
-        } else {
-            $("#detalhes").html("Nenhum registor encontrado.");
-        }
-        primeirotd = "<tr><td>"
     }
-}
-function searchAgenda(value){
-    if (value.length < 1) {
-        return;
-    }
-    //var str = "'%" + value + "%'";
     $.ajax({
         type: 'GET',
-        url: '/admin/usuario',
+        url: '/agenda',
         data: {
-            busca: value
+            buscaagenda: palavra,
+            categoria: categ,
+            datainicial: dataini,
+            datafinal: datafim
         },
         success: function (dados) {
             try {
-                var usuarios = JSON.parse(dados);
-                if (usuarios[0]) {
-                    fillTable(usuarios);
+                var agendas = JSON.parse(dados);
+                if (agendas[0]) {
+                    fillTableAgendaUsuario(agendas);
                 }else{
                     $("#conteudo").html("");
                     $("#detalhes").html("Nenhum registor encontrado.");
                 }
             } catch (err) {
-                alert("Nenhum registro encontrado com o texto " + texto);
+                alert("Nenhum registro encontrado com o texto " + palavra);
                 $("#pesquisa").val("");
                 $("#conteudo").html("");
             }
@@ -693,6 +688,53 @@ function searchAgenda(value){
             }, 5000);
         }
     });
+});
+
+function fillTableAgenda(row) {
+    $("#conteudo").html("");
+    primeirotd = "";
+    for (var i in row) {
+        primeirotd = "<tr><td>";
+        if(row[i].status == 0){
+            primeirotd = "<tr class='alert-danger'><td>";
+        }
+        $("#conteudo").append(primeirotd + row[i].id +"</td>"+
+            "<td>" + row[i].data + "</td><td>" + row[i].hora + "</td><td>" + row[i].titulo + "</td>" +
+            "<td>" + row[i].assunto + "</td>"+
+            "<td>" + row[i].nome + "</td>"+
+            "<td>" + row[i].categdesc + "</td>"+
+            "<td><a class='btn btn-warning glyphicon glyphicon-pencil btn-xs' href='/admin/agenda/editar/" + row[i].id + "'></td>" +
+            "</tr>");
+        if (row.length > 0) {
+            $("#detalhes").html("Total de: " + row.length + " registro(s).");
+        } else {
+            $("#detalhes").html("Nenhum registor encontrado.");
+        }
+        primeirotd = "<tr><td>"
+    }
+}
+function fillTableAgendaUsuario(row) {
+    $("#conteudo").html("");
+    primeirotd = "";
+    for (var i in row) {
+        primeirotd = "<tr><td>";
+        if(row[i].status == 0){
+            primeirotd = "<tr class='alert-danger'><td>";
+        }
+        $("#conteudo").append(primeirotd + row[i].id +"</td>"+
+            "<td>" + row[i].data + "</td><td>" + row[i].hora + "</td><td>" + row[i].titulo + "</td>" +
+            "<td>" + row[i].assunto + "</td>"+
+            "<td>" + row[i].nome + "</td>"+
+            "<td>" + row[i].categdesc + "</td>"+
+            "<td><a class='btn btn-info glyphicon glyphicon-info-sign btn-xs' href='/agenda/show/" + row[i].id + "'></td>" +
+            "</tr>");
+        if (row.length > 0) {
+            $("#detalhes").html("Total de: " + row.length + " registro(s).");
+        } else {
+            $("#detalhes").html("Nenhum registor encontrado.");
+        }
+        primeirotd = "<tr><td>"
+    }
 }
 $(document).ready(function () {
     $("#formCadastro").submit(function (e) {

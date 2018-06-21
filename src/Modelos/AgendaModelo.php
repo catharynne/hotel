@@ -24,6 +24,47 @@ class AgendaModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
+    function getAgenda($id) {
+
+        try {
+            $sql = "select a.*, u.nome,c.descricao from agenda as a inner join usuario as u on u.id = a.admin 
+            inner join categoria as c on c.id = a.categoria where a.cliente = :id order by a.data, a.hora";
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':id',$id);
+            $p_sql->execute();
+            return $p_sql->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
+    function getAgendaUsuario($id,$cliente) {
+        try {
+            $sql = "select a.*, u.nome,(select usuario.nome from usuario where usuario.id = a.admin) as nomeadmin,
+            c.descricao from agenda as a inner join usuario as u on u.id = a.cliente 
+            inner join categoria as c on c.id = a.categoria where a.cliente = :cliente and
+            a.id = :id order by a.data, a.hora";
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':id',$id);
+            $p_sql->bindValue(':cliente',$cliente);
+            $p_sql->execute();
+            return $p_sql->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
+    function getAgendaAdmin($id) {
+        try {
+            $sql = "select a.*, u.nome,(select usuario.nome from usuario where usuario.id = a.admin) as nomeadmin,
+            c.descricao from agenda as a inner join usuario as u on u.id = a.cliente 
+            inner join categoria as c on c.id = a.categoria where a.id = :id";
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':id',$id);
+            $p_sql->execute();
+            return $p_sql->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $ex) {
+            return 'deu erro na conexão:' . $ex;
+        }
+    }
     function procurarAgenda($key,$categ,$dataini,$datafim) {
         try {
             if ($dataini != "") {
@@ -47,7 +88,7 @@ class AgendaModelo {
                 $where = " where";
             }
             if(trim($key) != ""){
-                $where .= " usuario.nome  LIKE :pal or a.assunto  LIKE :pal or a.titulo LIKE :pal ";
+                $where .= " (usuario.nome  LIKE :pal or a.assunto  LIKE :pal or a.titulo LIKE :pal) ";
             }
             if($categ > 0){
                 if(trim($key) != ""){
@@ -76,7 +117,7 @@ class AgendaModelo {
             $lista = [];
             $p_sql = Conexao::getInstancia()->prepare($sql);
             if(trim($key) != ""){
-                $p_sql->bindValue(':pal',"%".$key."%");
+                $p_sql->bindValue(':pal',"%".trim($key)."%");
             }
             if($categ > 0){
                 $p_sql->bindValue(':categoria',$categ);
@@ -93,6 +134,9 @@ class AgendaModelo {
             $p_sql->execute();
             $rows = $p_sql->fetchAll(PDO::FETCH_OBJ);
             foreach ($rows as $key => $row) {
+                $row->data = date('d/m/Y',strtotime($row->data));
+                if (strlen($row->assunto) > 30)
+                    $row->assunto = substr($row->assunto, 0, 30) . '...';
                 $lista[] = $row;
             }
             return $lista;
@@ -101,38 +145,93 @@ class AgendaModelo {
         }
     }
 
-    function validaUsuario($email,$senha){
-        try{
-            $sql = "select usuario.id, usuario.nome, usuario.email, usuario.telefone, usuario.cpf, 
-            tipo_usuario.tipo from usuario, tipo_usuario where usuario.email = lower(:email) 
-            and usuario.senha = md5(:senha) and tipo_usuario.id = usuario.tipousuario limit 1;";
-            $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':email',$email);
-            $p_sql->bindValue(':senha',$senha);
-            $p_sql->execute();
-            if ($p_sql->rowCount() > 0) {
-                return $p_sql->fetch(PDO::FETCH_ASSOC);
-            }
-            return null;
-        }catch(Exception $ex){
-            return 'deu erro na conexão: '.$ex;
-        }
-    }
-    function tipoUsuario($id) {
+    function procurarAgendaUsuario($key,$categ,$dataini,$datafim,$idUsuario) {
         try {
-            $sql = 'select tipo from tipo_usuario where id = :id';
-            $p_sql = Conexao::getInstancia()->prepare($sql);
-            $p_sql->bindValue(':id',$id);
-            $p_sql->execute();
-            if ($p_sql->rowCount() > 0) {
-                return $p_sql->fetch(PDO::FETCH_ASSOC);
+            if ($dataini != "") {
+                $date = $dataini;
+                $date = explode('/', $date);
+                $dia = $date[0];
+                $mes = $date[1];
+                $ano = $date[2];
+                $dataini = $ano . '-' . $mes . '-' . $dia;
             }
-            return null;
+            if ($datafim != "") {
+                $date = $datafim;
+                $date = explode('/', $date);
+                $dia = $date[0];
+                $mes = $date[1];
+                $ano = $date[2];
+                $datafim = $ano . '-' . $mes . '-' . $dia;
+            }
+            $where = "";
+            if(trim($key) != "" || $categ > 0 || $dataini != "" || $datafim != ""){
+                $where = " where";
+            }
+            if(trim($key) != ""){
+                $where .= " (usuario.nome  LIKE :pal or a.assunto  LIKE :pal or a.titulo LIKE :pal) ";
+            }
+            if($categ > 0){
+                if(trim($key) != ""){
+                    $where .= " and";
+                }
+                $where .= " a.categoria = :categoria";
+            }
+            if($dataini != ""){
+                if(trim($key) != "" || $categ > 0){
+                    $where .= " and";
+                }
+                $where .= " a.data >= :datainicial";
+            }
+            if($datafim != ""){
+                if(trim($key) != "" || $categ > 0 || $dataini != ""){
+                    $where .= " and";
+                }
+                $where .= " a.data <= :datafinal";
+            }
+            if($where != ""){
+                $where .= " and a.cliente = :cliente";
+            }else{
+                $where .= " where a.cliente = :cliente";
+            }
+            $sql = "select a.id, a.titulo, a.assunto, a.data, a.hora, a.admin,a.status,a.cliente,
+            a.categoria,usuario.nome, categoria.descricao as categdesc from agenda as a 
+            inner join usuario on usuario.id = a.admin inner join categoria on categoria.id = 
+            a.categoria".$where." order by a.data, a.hora";
+            /*$sql = "select a.*,u.nome,c.descricao from agenda as a,usuario as u, categoria as c 
+            where a.cliente = u.id and a.categoria = c.id".$where." order by a.data, a.hora";*/
+            $lista = [];
+            $p_sql = Conexao::getInstancia()->prepare($sql);
+            $p_sql->bindValue(':cliente',$idUsuario);
+            if(trim($key) != ""){
+                $p_sql->bindValue(':pal',"%".trim($key)."%");
+            }
+            if($categ > 0){
+                $p_sql->bindValue(':categoria',$categ);
+            }
+            if($dataini != ""){
+                $p_sql->bindValue(':datainicial',$dataini);
+            }
+            if($datafim != ""){
+                $p_sql->bindValue(':datafinal',$datafim);
+            }
+            /*print_r($sql);
+            return;
+            die();*/
+            $p_sql->execute();
+            $rows = $p_sql->fetchAll(PDO::FETCH_OBJ);
+            foreach ($rows as $key => $row) {
+                $row->data = date('d/m/Y',strtotime($row->data));
+                if (strlen($row->assunto) > 30)
+                    $row->assunto = substr($row->assunto, 0, 30) . '...';
+                $lista[] = $row;
+            }
+            return $lista;
         } catch (Exception $ex) {
             return 'deu erro na conexão:' . $ex;
         }
     }
-    
+
+
     function consultaDataHora($d,$h) {
         try {
             $sql = 'select * from agenda where data = :d and hora = :h';
@@ -164,7 +263,7 @@ class AgendaModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
-    
+
     function consultaId($id) {
         try {
             $sql = "select a.*,u.nome,c.descricao from agenda as a,usuario as u, categoria as c 
@@ -224,5 +323,6 @@ class AgendaModelo {
             return 'deu erro na conexão:' . $ex;
         }
     }
+    
 
 }

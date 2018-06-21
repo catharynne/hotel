@@ -48,9 +48,9 @@ class UsuarioModelo {
 
     function validaUsuario($email,$senha){
         try{
-            $sql = "select usuario.id, usuario.nome, usuario.email, usuario.telefone, usuario.cpf, 
-            usuario.tipousuario, tipo_usuario.tipo from usuario, tipo_usuario where usuario.email = lower(:email) 
-            and usuario.senha = md5(:senha) and tipo_usuario.id = usuario.tipousuario limit 1;";
+            $sql = " select u.id, u.nome,u.email,u.cpf,u.telefone,u.tipousuario, t.tipo from usuario as u 
+            inner join tipo_usuario as t on t.id = u.tipousuario where (u.email = lower(:email)
+            or u.cpf = lower(:email)) and u.senha = md5(:senha) limit 1";
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->bindValue(':email',$email);
             $p_sql->bindValue(':senha',$senha);

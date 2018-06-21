@@ -10,8 +10,10 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-      {% if usuario is not empty and usuario['tipo'] =='Administrador' %}
+      {% if usuario is not empty %}
         <li class="active"><a href="/admin">Dashboard</a></li>
+        <li class=""><a href="/agenda">Minha Agenda</a></li>
+      {% if usuario['tipo'] =='Administrador' %}
         <li class=""><a href="/admin/usuario">Usuários</a></li>
         <li class=""><a href="/admin/categoria">Categorias</a></li>
         <li class=""><a href="/admin/agenda">Agendas</a></li>
@@ -27,6 +29,7 @@
         <li><a href="#">Page 2</a></li>
         <li><a href="#">Page 3</a></li>
         -->
+        {% endif %}
         {% endif %}
       </ul>
       <ul class="nav navbar-nav navbar-right">

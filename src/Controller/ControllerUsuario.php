@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Twig\Environment;
 use PPI2\Modelos\UsuarioModelo;
+use PPI2\Modelos\AgendaModelo;
+use PPI2\Modelos\CategoriaModelo;
 use PPI2\Util\Sessao;
 use PPI2\Validacao\ValidaCPFCNPJ;
 use PPI2\Entidades\Usuario;
@@ -26,17 +28,14 @@ class ControllerUsuario {
         $this->sessao = $sessao;
     }
 
-    public function show() {
-        if ($this->sessao->existe('Usuario'))
-            return $this->response->setContent($this->twig->render('cadastro.twig'));
-        else{
-            $destino = '/login';
-            $redirecionar = new RedirectResponse($destino);
-            $redirecionar->send();
-            
-        }
-    }
     public function index() {
+        if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
+        }else{
+            $re = '/';
+            $redirecionar = new RedirectResponse($re);
+            $redirecionar->send();
+            return; 
+        }
         $busca = $this->contexto->get('busca');
         if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
             $usuarios = new UsuarioModelo();
@@ -68,6 +67,13 @@ class ControllerUsuario {
         }
     }
     public function salvar(){
+        if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
+        }else{
+            $re = '/';
+            $redirecionar = new RedirectResponse($re);
+            $redirecionar->send();
+            return; 
+        }
         $erro = [];
         $email = $this->contexto->get('email');
         $senha = $this->contexto->get('senha');
@@ -111,6 +117,13 @@ class ControllerUsuario {
         return;
     }
     public function editar($id){
+        if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
+        }else{
+            $re = '/';
+            $redirecionar = new RedirectResponse($re);
+            $redirecionar->send();
+            return; 
+        }
         $erro = [];
         if(!is_numeric($id) || $id < 1){
             $destino = '/admin/usuario';
@@ -131,6 +144,13 @@ class ControllerUsuario {
         return;
     }
     public function atualizar(){
+        if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
+        }else{
+            $re = '/';
+            $redirecionar = new RedirectResponse($re);
+            $redirecionar->send();
+            return; 
+        }
         $erro = [];
         $id = $this->contexto->get('idUsuario');
         $email = $this->contexto->get('email');
@@ -196,6 +216,12 @@ class ControllerUsuario {
             if($usuario['tipo'] == 'Administrador'){
                 echo('admin');
                 return;
+            }else if($usuario['tipo'] == 'Usuario'){
+                echo('cliente');
+                return;
+            }else{
+                echo('invalido');
+                return;
             }
         }else{
             //Usuário não encontrado, ou senha errada, retorna para welcome.php e mostra o erro de usuário ou senha.
@@ -211,5 +237,53 @@ class ControllerUsuario {
         $re = new RedirectResponse('/');
         $re->send();
     }
-
+    public function agenda(){
+        $busca = $this->contexto->get('buscaagenda');
+        $categ = $this->contexto->get('categoria');
+        $dataini = $this->contexto->get('datainicial');
+        $datafim = $this->contexto->get('datafinal');
+        if ($this->sessao->existe('usuario')){
+            $agendas = new AgendaModelo();
+            $categorias = new CategoriaModelo();
+            if(isset($busca) || isset($categ) || isset($dataini) || isset($datafim)){
+                $agendas = $agendas->procurarAgendaUsuario($busca,$categ,$dataini,$datafim,$this->sessao->get('usuario')['id']);
+                echo json_encode($agendas);
+                return;
+            }else{
+                $categorias = $categorias->listar();
+                $agendas = $agendas->getAgenda($this->sessao->get('usuario')['id']);    
+            }
+            return $this->response->setContent($this->twig->render('usuario/agenda.php',['agendas' => $agendas,'categorias' => $categorias]));
+        }
+        else{
+            $destino = '/';
+            $redirecionar = new RedirectResponse($destino);
+            $redirecionar->send();
+            
+        }
+    }
+    public function showAgenda($id){
+        if(!is_numeric($id) || $id < 1){
+            $destino = '/agenda';
+            $redirecionar = new RedirectResponse($destino);
+            $redirecionar->send();
+            return;   
+        }
+        if ($this->sessao->existe('usuario')){
+            $agendas = new AgendaModelo();
+            $agenda = $agendas->getAgendaUsuario($id,$this->sessao->get('usuario')['id'])[0];
+            if($agenda != null){
+                return $this->response->setContent($this->twig->render('agenda/show.php',['agenda' => $agenda]));
+            }
+            $destino = '/agenda';
+            $redirecionar = new RedirectResponse($destino);
+            $redirecionar->send();
+        }
+        else{
+            $destino = '/';
+            $redirecionar = new RedirectResponse($destino);
+            $redirecionar->send();
+            
+        }
+    }
 }

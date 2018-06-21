@@ -1,12 +1,7 @@
 {% extends "master.twig" %}
 {% block conteudo %}
 <div class="col-md-12">
-	<h1 class="text-center text-success">Agendas</h1>
-	<div class="row">
-		<div class="col-md-12">
-			<a href="/admin/agenda/novo" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Novo</a>
-		</div>
-	</div>
+	<h1 class="text-center text-success">{{usuario['nome']}} - Agenda</h1>
 	<div class="form-group">
 		<div class="row">
 			<div class="col-md-3">
@@ -38,10 +33,10 @@
 			<div class="col-md-2">
 				<label class="control-label">&nbsp;</label>
 				<div class="input-group">
-					<div class="input-group-addon btn-primary" id="btnIconPesquisaAgenda">
+					<div class="input-group-addon btn-primary" id="btnIconPesquisaAgendaUsuario">
 						<i class="glyphicon glyphicon-search" style="color: white;"></i>
 					</div>
-					<input id="btnPesquisaAgenda" type="button" class="form-control btn btn-primary" value="Buscar">
+					<input id="btnPesquisaAgendaUsuario" type="button" class="form-control btn btn-primary" value="Buscar">
 				</div>
 			</div>
 		</div>
@@ -55,7 +50,7 @@
 					<th class="text-center">Hora</th>
 					<th class="text-center">Titulo</th>
 					<th class="text-center">Assunto</th>
-					<th class="text-center">Cliente</th>
+					<th class="text-center">Quem agendou?</th>
 					<th class="text-center">Categoria</th>
 					<th class="text-center">Ações</th>
 				</tr>
@@ -75,8 +70,7 @@
 						<td>{{agenda['nome']}}</td>
 						<td>{{agenda['descricao']}}</td>
 						<td>
-							<a href="/admin/agenda/editar/{{agenda['id']}}" class="btn btn-warning glyphicon glyphicon-pencil btn-xs"></a>
-							<a href="/admin/agenda/show/{{agenda['id']}}" class="btn btn-info glyphicon glyphicon-info-sign btn-xs"></a>
+							<a href="/agenda/show/{{agenda['id']}}" class="btn btn-info glyphicon glyphicon-info-sign btn-xs"></a>
 						</td>
 					</tr>
 					{% endfor %}
