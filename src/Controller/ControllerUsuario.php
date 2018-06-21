@@ -66,14 +66,18 @@ class ControllerUsuario {
             
         }
     }
-    public function salvar(){
-        if ($this->sessao->existe('usuario') && $this->sessao->get('usuario')['tipo'] == 'Administrador'){
-        }else{
-            $re = '/';
-            $redirecionar = new RedirectResponse($re);
-            $redirecionar->send();
-            return; 
+    public function registro() {
+        if (!$this->sessao->existe('usuario')){
+            return $this->response->setContent($this->twig->render('usuario/novo.php'));
         }
+        else{
+            $destino = '/';
+            $redirecionar = new RedirectResponse($destino);
+            $redirecionar->send();
+            
+        }
+    }
+    public function salvar(){
         $erro = [];
         $email = $this->contexto->get('email');
         $senha = $this->contexto->get('senha');

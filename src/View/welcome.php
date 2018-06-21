@@ -26,6 +26,12 @@
 			</div>
 		</div>
 		<button class="btn btn-primary btn-block" id="btnLogin">Login</button>
+		<br>
+
+		<div class="row container">
+		<label class="control-label">Não tem registro?</label>
+		<a href="/registro" class="btn btn-success">Cadastre-se</a>
+		</div>
 		<div id="processando" style="display: none;">
 			<img src="img/ajax-loader.gif" />
 		</div>

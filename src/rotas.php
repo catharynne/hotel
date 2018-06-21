@@ -10,9 +10,10 @@ $rotas = new RouteCollection();
 $rotas->add('raiz', new Route('/', array(
     '_controller' => 'PPI2\Controller\ControllerIndex',
     'method' => 'index')));
+$rotas->add('registro', new Route('/registro',
+        array('_controller' => 'PPI2\Controller\ControllerUsuario',
+            "method" => 'registro')));
 
-$rotas->add('esporte', new Route('/esportes/{suffix}',
-        array('_controller' => 'PPI2\Controller\ControllerEsporte',"method" => 'msgInicial', 'suffix' => '')));
 //-------INICIO ROTAS ADMIN
 $rotas->add('validaLogin', new Route('/validaLogin',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
