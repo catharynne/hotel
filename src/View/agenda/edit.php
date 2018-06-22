@@ -49,7 +49,7 @@
 			<label class="control-label">Assunto</label>
 			<textarea style="min-height: 80px;resize: vertical;" class="form-control" placeholder="" name="assunto" rows="5" id="assunto" required>{{agenda['assunto']}}</textarea>
 			<label class="control-label">Data</label>
-			<input type="text" class="form-control" id="data" name="data" value="{{agenda['data']|date("d/m/Y")}}" required readonly="true">
+			<input type="text" class="form-control" id="dataatualizar" name="data" value="{{agenda['data']|date("d/m/Y")}}" required readonly="true">
 			<label class="control-label">Hora</label>
 			<div class="bootstrap-timepicker">
 				<input type="text" class="form-control timepicker" value="{{agenda['hora']}}" id="hora" name="hora" required readonly="true">
@@ -81,7 +81,7 @@
 <script src="/js/jquery.inputmask.js" type="text/javascript" ></script>
 <script type="text/javascript" src="/js/jquery.inputmask.date.extensions.js"></script>
 <script type="text/javascript">
-	$('#data').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/aaaa', "clearIncomplete": true })
+	$('#dataatualizar').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/aaaa', "clearIncomplete": true })
 	$('#hora').inputmask('99:99', { 'placeholder': 'HH:mm', "clearIncomplete": true })
 </script>
 {% endblock %}

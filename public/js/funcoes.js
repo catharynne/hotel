@@ -7,6 +7,13 @@ $(document).ready(function () {
       startDate:'0d',
       todayHighlight: true
   });
+     $('#dataatualizar').datepicker({
+      autoclose: true,
+      format: 'dd/mm/yyyy',
+      language: 'pt-BR',
+      weekStart: 0,
+      todayHighlight: true
+  });
     $('.makedata').datepicker('setDate', new Date());
     $('#hora').timepicker({
         showInputs: false,
@@ -357,7 +364,7 @@ $("#btnSalvarAgenda").click(function () {
 $("#btnAtualizarAgenda").click(function () {
     titulo = $("#titulo").val();
     assunto = $("#assunto").val();
-    data = $("#data").val();
+    data = $("#dataatualizar").val();
     hora = $("#hora").val();
     categoria = $("#categoria").val();
     cliente = $("#cliente").val();
@@ -367,13 +374,13 @@ $("#btnAtualizarAgenda").click(function () {
         alert("Todos os campos são de preenchimento obrigatório");
         return;
     }
-    datax = data.toString().split("/");
+    /*datax = data.toString().split("/");
     d1 = new Date(datax[2]+"-"+datax[1]+"-"+datax[0]+" "+hora);
     d2 = new Date();
     if(d1 < d2){
         alert("A data e a hora, não podem ser menores que a data e a hora atual xD");
         return;
-    }
+    }*/
     $.ajax({
         type: 'POST',
         url: '/agenda/atualizar',
