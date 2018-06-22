@@ -71,7 +71,7 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
-INSERT INTO `categoria` VALUES (5,'ADVOCACIA'),(6,'CONSULTÓRIO ODONTOLÓGICO'),(7,'RESTAURANTE');
+INSERT INTO `categoria` VALUES (5,'ADVOCACIA'),(6,'CONSULTÃ³RIO ODONTOLÃ³GICO'),(7,'RESTAURANTE');
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -117,7 +117,7 @@ CREATE TABLE `usuario` (
   PRIMARY KEY (`id`),
   KEY `tipousuario` (`tipousuario`),
   CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`tipousuario`) REFERENCES `tipo_usuario` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -126,7 +126,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'RAUL SHAUBER','admin@admin.com','06104510655','21232f297a57a5a743894a0e4a801fc3','00099999999',1),(2,'Usuario Comum','usuario@usuario.com','00000000001','f8032d5cae3de20fcec887f395ec9a6a','000999999999',2);
+INSERT INTO `usuario` VALUES (1,'RAUL SHAUBER','admin@admin.com','06104510655','21232f297a57a5a743894a0e4a801fc3','00099999999',1),(2,'Usuario Comum','usuario@usuario.com','00000000001','f8032d5cae3de20fcec887f395ec9a6a','000999999999',2),(7,'JULIANA MEDEIROS DA SILVA','juliana@gmail.com','00450771008','e10adc3949ba59abbe56e057f20f883e','38998982005',2);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -139,4 +139,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-21  6:37:08
+-- Dump completed on 2018-06-22  9:46:11

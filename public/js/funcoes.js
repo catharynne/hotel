@@ -305,6 +305,13 @@ $("#btnSalvarAgenda").click(function () {
         alert("Todos os campos são de preenchimento obrigatório");
         return;
     }
+    datax = data.toString().split("/");
+    d1 = new Date(datax[2]+"-"+datax[1]+"-"+datax[0]+" "+hora);
+    d2 = new Date();
+    if(d1 < d2){
+        alert("A data e a hora, não podem ser menores que a data e a hora atual xD");
+        return;
+    }
     $.ajax({
         type: 'POST',
         url: '/agenda/salvar',
@@ -358,6 +365,13 @@ $("#btnAtualizarAgenda").click(function () {
     idAgenda = $("#idAgenda").val();
     if(titulo == "" || assunto == "" || data == "" || hora == "" || cliente <= 0 || categoria <= 0){
         alert("Todos os campos são de preenchimento obrigatório");
+        return;
+    }
+    datax = data.toString().split("/");
+    d1 = new Date(datax[2]+"-"+datax[1]+"-"+datax[0]+" "+hora);
+    d2 = new Date();
+    if(d1 < d2){
+        alert("A data e a hora, não podem ser menores que a data e a hora atual xD");
         return;
     }
     $.ajax({
