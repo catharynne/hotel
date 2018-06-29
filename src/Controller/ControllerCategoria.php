@@ -126,12 +126,12 @@ class ControllerCategoria {
     }
 
     public function validaLogin(){
-        //validação via AJAX com method = POST da página welcome.php
+       
         $email = $this->contexto->get('email');
         $senha = $this->contexto->get('senha');
         $categoriaModelo = new CategoriaModelo();
         $categoria = $categoriaModelo->validaUsuario($email,$senha);
-        //se tiver o usuário cadastrado no banco e a senha estiver correta.
+        
         if($categoria != null){
             //passa o usuário para a sessão.
             $this->sessao->add('categoria',$usuario);
@@ -140,17 +140,14 @@ class ControllerCategoria {
                 return;
             }
         }else{
-            //Usuário não encontrado, ou senha errada, retorna para welcome.php e mostra o erro de usuário ou senha.
-            echo('errologin');
+           echo('errologin');
             return;
         }
 
     }
     public function logout(){
-        //remove a chave['ppi2'] e inválida a sessão.
         $this->sessao->del();
-        //redireciona para raiz '/'.
-        $re = new RedirectResponse('/');
+       $re = new RedirectResponse('/');
         $re->send();
     }
 

@@ -18,7 +18,7 @@ class Agenda {
     
     
     function __construct() {
-        //$this->cliente = new Usuario();
+      
     }
     
     function getId() {

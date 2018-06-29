@@ -15,9 +15,7 @@ use PPI2\Util\Sessao;
 $sessao = new Sessao();
 $sessao->start();
 
-//$sessao->add("Usuario", 'Chris');
-//$sessao->del();
-//print_r($sessao->get('Usuario'));
+
 include 'rotas.php';
 $request = Request::createFromGlobals();
 $contexto = new RequestContext();
@@ -27,7 +25,7 @@ $response = Response::create();
 
 
 $matcher = new UrlMatcher($rotas, $contexto);
-//print_r($contexto->getPathInfo());
+
 
 $loader = new FilesystemLoader(__DIR__ . '/View');
 $environment = new Environment($loader);
@@ -40,13 +38,11 @@ if(isset($_SESSION['ppi2'])){
 
 try {
     $atributos = $matcher->match($contexto->getPathInfo());
-    //print_r($atributos);
-    //return;
+
 
     $controller = $atributos['_controller'];
     $method = $atributos['method'];
-    //print_r($method);
-    //return;
+
     if (isset($atributos['suffix']))
         $parametros = $atributos['suffix'];
     else
