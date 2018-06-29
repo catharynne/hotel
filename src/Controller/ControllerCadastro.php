@@ -36,12 +36,12 @@ class ControllerCadastro {
     }
 
     public function cadastro() {
-        // validação
+       
 
 
         $descricao = $this->contexto->get('descricao');
         $preco = $this->contexto->get('preco');
-        // depois de validado
+       
         $produto = new Produto($descricao, $preco);
         $modeloProduto = new ModeloProdutos();
         if ($id = $modeloProduto->cadastrar($produto))

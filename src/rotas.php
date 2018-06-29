@@ -14,7 +14,7 @@ $rotas->add('registro', new Route('/registro',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'registro')));
 
-//-------INICIO ROTAS ADMIN
+
 $rotas->add('validaLogin', new Route('/validaLogin',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'validaLogin')));
@@ -37,15 +37,13 @@ $rotas->add('usuario/salvar', new Route('/usuario/salvar',
 $rotas->add('usuario/atualizar', new Route('/usuario/atualizar',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'atualizar')));
-//-------FIM ROTAS ADMIN
-//-------INICIO ROTAS CLIENTE
+
 $rotas->add('agenda', new Route('/agenda',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'agenda')));
 $rotas->add('agenda/show', new Route('/agenda/show/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',"method" => 'showAgenda', 'suffix' => '')));
-//-------FIM ROTAS CLIENTE
-//-------INICIO ROTAS CATEGORIA
+
 $rotas->add('admin/categoria', new Route('/admin/categoria',
         array('_controller' => 'PPI2\Controller\ControllerCategoria',
             "method" => 'index')));
@@ -62,8 +60,7 @@ $rotas->add('categoria/salvar', new Route('/categoria/salvar',
 $rotas->add('categoria/atualizar', new Route('/categoria/atualizar',
         array('_controller' => 'PPI2\Controller\ControllerCategoria',
             "method" => 'atualizar')));
-//-------FIM ROTAS CATEGORIA
-//-------INICIO ROTAS AGENDA
+
 $rotas->add('admin/agenda', new Route('/admin/agenda',
         array('_controller' => 'PPI2\Controller\ControllerAgenda',
             "method" => 'index')));
@@ -82,7 +79,7 @@ $rotas->add('agenda/atualizar', new Route('/agenda/atualizar',
             "method" => 'atualizar')));
 $rotas->add('admin/agenda/show', new Route('/admin/agenda/show/{suffix}',
         array('_controller' => 'PPI2\Controller\ControllerAgenda',"method" => 'show', 'suffix' => '')));
-//-------FIM ROTAS AGENDA
+
 $rotas->add('logout', new Route('/logout',
         array('_controller' => 'PPI2\Controller\ControllerUsuario',
             "method" => 'logout')));
@@ -96,8 +93,6 @@ $rotas->add('formCadastro', new Route('/formularioCadastro',
 $rotas->add('cadastroProduto', new Route('/cadastro',
         array('_controller' => 'PPI2\Controller\ControllerCadastro',
             "method" => 'cadastro')));
-/* $rotas->add('esporte', new Route('/financas', array('_controller' => 'PPI2\Controller\ControllerFinancas', "method"=>'msgInicialFinancas')));
-  $rotas->add('esporte', new Route('/produtos', array('_controller' => 'PPI2\Controller\ControllerProduto', "method"=>'listar')));
- */
+
 return $rotas;
 

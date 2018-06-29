@@ -27,9 +27,9 @@ class ControllerAdmin {
 
     public function index(){
         $usuario = $this->sessao->get('usuario');
-        //se tiver o usuário cadastrado no banco e a senha estiver correta.
+       
         if($this->sessao->get('usuario')['tipo'] == 'Administrador'){
-            //passa o usuário para a sessão.
+
             return $this->response->setContent($this->twig->render('admin/dashboard.php',['usuario' => $usuario]));
         }else{
             $re = new RedirectResponse('/');

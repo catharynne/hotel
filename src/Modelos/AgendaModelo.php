@@ -112,8 +112,7 @@ class AgendaModelo {
             a.categoria,usuario.nome, categoria.descricao as categdesc from agenda as a 
             inner join usuario on usuario.id = a.cliente inner join categoria on categoria.id = 
             a.categoria".$where." order by a.data, a.hora";
-            /*$sql = "select a.*,u.nome,c.descricao from agenda as a,usuario as u, categoria as c 
-            where a.cliente = u.id and a.categoria = c.id".$where." order by a.data, a.hora";*/
+            
             $lista = [];
             $p_sql = Conexao::getInstancia()->prepare($sql);
             if(trim($key) != ""){
@@ -128,9 +127,7 @@ class AgendaModelo {
             if($datafim != ""){
                 $p_sql->bindValue(':datafinal',$datafim);
             }
-            /*print_r($sql);
-            return;
-            die();*/
+           
             $p_sql->execute();
             $rows = $p_sql->fetchAll(PDO::FETCH_OBJ);
             foreach ($rows as $key => $row) {
@@ -197,8 +194,7 @@ class AgendaModelo {
             a.categoria,usuario.nome, categoria.descricao as categdesc from agenda as a 
             inner join usuario on usuario.id = a.admin inner join categoria on categoria.id = 
             a.categoria".$where." order by a.data, a.hora";
-            /*$sql = "select a.*,u.nome,c.descricao from agenda as a,usuario as u, categoria as c 
-            where a.cliente = u.id and a.categoria = c.id".$where." order by a.data, a.hora";*/
+            
             $lista = [];
             $p_sql = Conexao::getInstancia()->prepare($sql);
             $p_sql->bindValue(':cliente',$idUsuario);
@@ -214,9 +210,7 @@ class AgendaModelo {
             if($datafim != ""){
                 $p_sql->bindValue(':datafinal',$datafim);
             }
-            /*print_r($sql);
-            return;
-            die();*/
+           
             $p_sql->execute();
             $rows = $p_sql->fetchAll(PDO::FETCH_OBJ);
             foreach ($rows as $key => $row) {

@@ -183,21 +183,21 @@ class ControllerAgenda {
     }
 
     public function validaLogin(){
-        //validação via AJAX com method = POST da página welcome.php
+        
         $email = $this->contexto->get('email');
         $senha = $this->contexto->get('senha');
         $usuarioModelo = new AgendaModelo();
         $usuario = $usuarioModelo->validaUsuario($email,$senha);
-        //se tiver o usuário cadastrado no banco e a senha estiver correta.
+        
         if($usuario != null){
-            //passa o usuário para a sessão.
+           
             $this->sessao->add('usuario',$usuario);
             if($usuario['tipo'] == 'Administrador'){
                 echo('admin');
                 return;
             }
         }else{
-            //Usuário não encontrado, ou senha errada, retorna para welcome.php e mostra o erro de usuário ou senha.
+            
             echo('errologin');
             return;
         }

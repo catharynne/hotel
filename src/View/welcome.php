@@ -5,7 +5,7 @@
 
 <div class="row">
 	<div class="col-md-8">
-		<h1>RAUL - PROJETO DE PPI2 </h1>
+		<h1>Agenda Online </h1>
 
 	</div>
 	{% if usuario is empty %}
